@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="时间戳转换 — Unix 时间戳与日期互转"
+  description="免费在线 Unix 时间戳转换工具。支持秒级和毫秒级时间戳与人类可读日期双向转换，实时显示当前时间戳。"
+  lang="zh"
+>
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "什么是 Unix 时间戳？",
+        "acceptedAnswer": { "@type": "Answer", "text": "Unix 时间戳是指从 1970 年 1 月 1 日（UTC/GMT 的午夜）起经过的秒数。" }
+      },
+      {
+        "@type": "Question",
+        "name": "秒和毫秒有什么区别？",
+        "acceptedAnswer": { "@type": "Answer", "text": "10 位数字的时间戳表示秒，而 13 位数字的时间戳表示毫秒。" }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">时间戳转换</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">时间戳转换</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        将 Unix 时间戳转换为人类可读的日期，或将日期转换为时间戳。
+      </p>
+    </div>
+
+    <!-- 实时极客时钟面板 -->
+    <div class="mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 p-8 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-lg">
+      <div class="mb-2 text-sm font-medium tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">当前 Unix 时间戳</div>
+      
+      <!-- 注意这里：我删掉了所有白色/黑色，强制使用了 text-indigo-600 和 dark:text-indigo-400 -->
+      <div id="live-timestamp" class="font-mono text-4xl font-bold sm:text-6xl tracking-tight tabular-nums text-indigo-600 dark:text-indigo-400">
+        0000000000
+      </div>
+      
+      <div class="mt-4 flex flex-col sm:flex-row justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <span id="live-date-local" class="font-mono">本地时间: --</span>
+        <span id="live-date-utc" class="font-mono">UTC 时间: --</span>
+      </div>
+    </div>
+
+    <!-- 双向转换面板 -->
+    <div class="grid gap-4 lg:grid-cols-2">
+      <!-- Timestamp 转 日期 -->
+      <div class="flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="border-b border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium">时间戳 转 日期</span>
+        </div>
+        <div class="flex flex-col gap-4 p-4">
+          <div class="flex gap-2">
+            <input type="text" id="ts-input" placeholder="例如: 1700000000" class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 dark:border-gray-700" />
+            <button id="ts-btn" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">转换</button>
+          </div>
+          <div class="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-800">
+            <span class="text-gray-500">本地时间:</span>
+            <span id="ts-result-local" class="font-mono text-gray-900 dark:text-gray-100">--</span>
+          </div>
+          <div class="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-800">
+            <span class="text-gray-500">UTC 时间:</span>
+            <span id="ts-result-utc" class="font-mono text-gray-900 dark:text-gray-100">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 日期 转 Timestamp -->
+      <div class="flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="border-b border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium">日期 转 时间戳</span>
+        </div>
+        <div class="flex flex-col gap-4 p-4">
+          <div class="flex gap-2">
+            <input type="datetime-local" id="date-input" class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 dark:border-gray-700" />
+            <button id="date-btn" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">转换</button>
+          </div>
+          <div class="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-800">
+            <span class="text-gray-500">秒级 (10位):</span>
+            <span id="date-result-sec" class="font-mono text-gray-900 dark:text-gray-100">--</span>
+          </div>
+          <div class="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-800">
+            <span class="text-gray-500">毫秒级 (13位):</span>
+            <span id="date-result-ms" class="font-mono text-gray-900 dark:text-gray-100">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/json-formatter" title="JSON 格式化" desc="瞬间格式化并校验 JSON 数据。" icon="{ }" />
+        <ToolCard href="/zh/base64" title="Base64 编解码" desc="文本与 Base64 之间的互相转换。" icon="🔐" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>什么是 Unix 时间戳？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Unix 时间戳是指从 1970 年 1 月 1 日（UTC/GMT 的午夜）起经过的秒数。</p>
+      </details>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>秒和毫秒有什么区别？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">10 位数字的时间戳表示秒，而 13 位数字的时间戳表示毫秒。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    // 实时时钟逻辑
+    function updateLiveTime() {
+      const now = new Date();
+      const sec = Math.floor(now.getTime() / 1000);
+      (document.getElementById('live-timestamp') as HTMLElement).textContent = sec.toString();
+      (document.getElementById('live-date-local') as HTMLElement).textContent = '本地时间: ' + now.toLocaleString();
+      (document.getElementById('live-date-utc') as HTMLElement).textContent = 'UTC 时间: ' + now.toUTCString();
+    }
+    setInterval(updateLiveTime, 100); 
+    updateLiveTime();
+
+    // 时间戳转日期逻辑
+    function tsToDate() {
+      const val = (document.getElementById('ts-input') as HTMLInputElement).value.trim();
+      if (!val) return;
+      let ts = parseInt(val, 10);
+      if (val.length === 10) ts *= 1000; 
+      
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) {
+        (document.getElementById('ts-result-local') as HTMLElement).textContent = '无效的时间戳';
+        (document.getElementById('ts-result-utc') as HTMLElement).textContent = '无效的时间戳';
+        return;
+      }
+      (document.getElementById('ts-result-local') as HTMLElement).textContent = d.toLocaleString();
+      (document.getElementById('ts-result-utc') as HTMLElement).textContent = d.toUTCString();
+    }
+
+    // 日期转时间戳逻辑
+    function dateToTs() {
+      const val = (document.getElementById('date-input') as HTMLInputElement).value;
+      if (!val) return;
+      const d = new Date(val);
+      (document.getElementById('date-result-sec') as HTMLElement).textContent = Math.floor(d.getTime() / 1000).toString();
+      (document.getElementById('date-result-ms') as HTMLElement).textContent = d.getTime().toString();
+    }
+
+    document.getElementById('ts-btn')?.addEventListener('click', tsToDate);
+    document.getElementById('date-btn')?.addEventListener('click', dateToTs);
+  </script>
+</BaseLayout>

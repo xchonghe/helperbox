@@ -1,0 +1,161 @@
+---
+// 注意这里的 ../ 变成了 ../../，因为多了一层文件夹
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="UUID 生成器 — 在线生成随机 UUID v4"
+  description="免费的在线 UUID 生成器。一键生成最多 50 个符合 RFC 4122 标准的版本 4 UUID。"
+  lang="zh"
+>
+  <!-- 结构化数据（中文 SEO） -->
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UUID 生成器",
+    "url": "https://www.helperbox.cc/zh/uuid-generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0" }
+  }
+  </script>
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "什么是 UUID？",
+        "acceptedAnswer": { "@type": "Answer", "text": "UUID 是一个 128 位的数字，用于在计算机系统中唯一标识信息。" }
+      },
+      {
+        "@type": "Question",
+        "name": "生成的 UUID 安全吗？",
+        "acceptedAnswer": { "@type": "Answer", "text": "安全。它们完全在你的浏览器本地使用 crypto.randomUUID() 生成，不会上传到任何服务器。" }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-3xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">UUID 生成器</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">UUID 生成器</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        快速生成随机的 RFC 4122 版本 4 UUID。所有操作完全在您的浏览器本地运行。
+      </p>
+    </div>
+
+    <!-- 核心操作面板 -->
+    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center gap-3">
+          <label for="count" class="text-sm font-medium">数量：</label>
+          <select id="count" class="rounded-md border border-gray-300 bg-transparent px-2 py-1 text-sm outline-none focus:border-indigo-500 dark:border-gray-700">
+            <option value="1" class="dark:bg-gray-900">1</option>
+            <option value="5" class="dark:bg-gray-900">5</option>
+            <option value="10" class="dark:bg-gray-900">10</option>
+            <option value="20" class="dark:bg-gray-900">20</option>
+          </select>
+        </div>
+        <button id="generate-btn" class="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 active:scale-95">
+          生成
+        </button>
+      </div>
+
+      <div class="relative min-h-[200px] p-4">
+        <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div id="result-container" class="relative z-10 flex flex-col gap-2"></div>
+      </div>
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/json-formatter" title="JSON 格式化" desc="瞬间格式化并校验 JSON 数据。" icon="{ }" />
+        <ToolCard href="/zh/timestamp" title="时间戳转换" desc="把 Unix 时间戳转换为日期。" icon="🕒" />
+      </div>
+    </div>
+
+    <!-- FAQ 区 -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>什么是 UUID？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          UUID（通用唯一识别码）是一个 128 位的数字，用于在计算机系统中标识信息。版本 4 UUID 是随机生成的，在实际应用中几乎可以保证绝对唯一。
+        </p>
+      </details>
+
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>生成的 UUID 安全吗？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          非常安全。它们是使用您浏览器内置的 <code>crypto.randomUUID()</code> 函数完全离线生成的，具有密码学安全性。没有任何数据被上传到服务器。
+        </p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const btn = document.getElementById('generate-btn') as HTMLButtonElement;
+    const container = document.getElementById('result-container') as HTMLDivElement;
+    const select = document.getElementById('count') as HTMLSelectElement;
+
+    function render() {
+      const count = parseInt(select.value, 10);
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const uuid = crypto.randomUUID();
+        const row = document.createElement('div');
+        row.className = 'group flex items-center justify-between rounded-lg border border-transparent bg-white px-4 py-3 shadow-sm transition hover:border-indigo-200 dark:bg-gray-900 dark:hover:border-indigo-900/50';
+        
+        const span = document.createElement('span');
+        span.className = 'font-mono text-sm text-gray-800 dark:text-gray-200 selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100';
+        span.textContent = uuid;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'ml-4 rounded-md px-3 py-1.5 text-xs font-medium text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white';
+        copyBtn.textContent = '复制';
+        
+        copyBtn.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(uuid);
+          copyBtn.textContent = '已复制！';
+          copyBtn.classList.add('text-green-600', 'dark:text-green-400');
+          setTimeout(() => {
+            copyBtn.textContent = '复制';
+            copyBtn.classList.remove('text-green-600', 'dark:text-green-400');
+          }, 2000);
+        });
+
+        row.appendChild(span);
+        row.appendChild(copyBtn);
+        container.appendChild(row);
+      }
+    }
+    btn.addEventListener('click', render);
+    render();
+  </script>
+</BaseLayout>

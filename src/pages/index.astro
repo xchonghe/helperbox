@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { useTranslations } from '../i18n';
+
+const t = useTranslations('en');
+
+const categories = [
+  {
+    name: 'Image Tools',
+    tools: [
+      { href: '/compress-image', title: 'Compress Image', desc: 'Shrink image file size without losing quality.', icon: '🗜️' },
+      { href: '/convert-image', title: 'Convert Image', desc: 'Convert between JPG, PNG, WebP and AVIF.', icon: '🔄' },
+      { href: '/resize-image', title: 'Resize Image', desc: 'Change image dimensions in your browser.', icon: '📐' },
+      { href: '/watermark', title: 'Image Watermark', desc: 'Add custom text watermarks to photos.', icon: '💧' },
+    ],
+  },
+  {
+    name: 'PDF Tools',
+    tools: [
+      { href: '/merge-pdf', title: 'Merge PDF', desc: 'Combine multiple PDFs into one file.', icon: '📎' },
+      { href: '/split-pdf', title: 'Split PDF', desc: 'Split a PDF into separate pages.', icon: '✂️' },
+    ],
+  },
+  {
+    name: 'Developer Tools',
+    tools: [
+      { href: '/json-formatter', title: 'JSON Formatter', desc: 'Format and validate JSON instantly.', icon: '{ }' },
+      { href: '/base64', title: 'Base64 Converter', desc: 'Convert text to and from Base64.', icon: '🔐' },
+      { href: '/uuid-generator', title: 'UUID Generator', desc: 'Generate random UUID v4 values.', icon: '🆔' },
+      { href: '/timestamp', title: 'Timestamp Converter', desc: 'Convert Unix timestamps to dates.', icon: '🕒' },
+      { href: '/url-encode', title: 'URL Encode / Decode', desc: 'Encode or decode URL components.', icon: '🔗' },
+      { href: '/password-generator', title: 'Password Generator', desc: 'Create strong and secure random passwords.', icon: '🔑' },
+      { href: '/word-counter', title: 'Word Counter', desc: 'Count words, characters, and reading time.', icon: '📝' },
+      { href: '/color-converter', title: 'Color Converter', desc: 'Convert HEX, RGB, HSL and generate palettes.', icon: '🎨' },
+    ],
+  },
+];
+---
+<BaseLayout
+  title="HelperBox — Free Online Tools That Run in Your Browser"
+  description="Free, private online tools for images, PDFs and developers. Everything runs in your browser — no uploads, no signup."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main>
+    <!-- Hero 区 -->
+    <section class="mx-auto max-w-6xl px-4 pt-20 pb-14 text-center">
+      <h1 class="mx-auto max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
+        {t.hero.title}
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-gray-600 dark:text-gray-400">
+        {t.hero.subtitle}
+      </p>
+
+      <div class="mx-auto mt-8 max-w-xl">
+        <input
+          id="tool-search"
+          type="search"
+          placeholder={t.hero.searchPlaceholder}
+          class="w-full rounded-xl border border-gray-300 bg-white px-5 py-3.5 text-base shadow-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-700 dark:bg-gray-900"
+        />
+      </div>
+    </section>
+
+    <!-- 分类网格 -->
+    <div class="mx-auto max-w-6xl px-4">
+      {categories.map((cat) => (
+        <section class="mb-14">
+          <h2 class="mb-5 text-2xl font-bold tracking-tight">{cat.name}</h2>
+          <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {cat.tools.map((tool) => <ToolCard {...tool} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </main>
+
+  <Footer lang="en" />
+
+  <!-- 搜索过滤 -->
+  <script>
+    const input = document.getElementById('tool-search') as HTMLInputElement | null;
+    input?.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      document.querySelectorAll<HTMLElement>('[data-tool]').forEach((card) => {
+        const name = (card.dataset.tool ?? '').toLowerCase();
+        card.style.display = name.includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+</BaseLayout>

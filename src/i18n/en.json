@@ -1,0 +1,18 @@
+{
+  "siteName": "HelperBox",
+  "nav": {
+    "image": "Image",
+    "pdf": "PDF",
+    "dev": "Developer"
+  },
+  "hero": {
+    "title": "All your file tools, right in your browser.",
+    "subtitle": "No upload. No signup. 100% private.",
+    "searchPlaceholder": "Search tools..."
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "All rights reserved."
+  }
+}

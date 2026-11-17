@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* 让 dark: 类名跟随 html 上的 .dark 类切换，而不是跟随系统 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 全站基础字体和背景 */
+body {
+  @apply bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100;
+}

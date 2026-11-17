@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="UUID Generator — Generate random UUID v4"
+  description="Free online UUID generator. Generate up to 50 random RFC 4122 version 4 UUIDs with a single click."
+  lang="en"
+>
+  <!-- 结构化数据（SEO 魔法） -->
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UUID Generator",
+    "url": "https://www.helperbox.cc/uuid-generator",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0" }
+  }
+  </script>
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a UUID?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A UUID is a 128-bit number used to uniquely identify information in computer systems." }
+      },
+      {
+        "@type": "Question",
+        "name": "Are generated UUIDs safe?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, they are generated locally in your browser using crypto.randomUUID(), which is cryptographically secure." }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-3xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">UUID Generator</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">UUID Generator</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Quickly generate random RFC 4122 version 4 UUIDs. Everything runs locally in your browser.
+      </p>
+    </div>
+
+    <!-- 核心操作面板（暗黑科技风） -->
+    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center gap-3">
+          <label for="count" class="text-sm font-medium">Quantity:</label>
+          <select id="count" class="rounded-md border border-gray-300 bg-transparent px-2 py-1 text-sm outline-none focus:border-indigo-500 dark:border-gray-700">
+            <option value="1" class="dark:bg-gray-900">1</option>
+            <option value="5" class="dark:bg-gray-900">5</option>
+            <option value="10" class="dark:bg-gray-900">10</option>
+            <option value="20" class="dark:bg-gray-900">20</option>
+          </select>
+        </div>
+        <button id="generate-btn" class="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 active:scale-95">
+          Generate
+        </button>
+      </div>
+
+      <div class="relative min-h-[200px] p-4">
+        <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div id="result-container" class="relative z-10 flex flex-col gap-2"></div>
+      </div>
+    </div>
+
+    <!-- 相关工具（增加粘性） -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/json-formatter" title="JSON Formatter" desc="Format and validate JSON instantly." icon="{ }" />
+        <ToolCard href="/timestamp" title="Timestamp Converter" desc="Convert Unix timestamps to dates." icon="🕒" />
+      </div>
+    </div>
+
+    <!-- FAQ 区 -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>What is a UUID?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          A UUID (Universally Unique Identifier) is a 128-bit number used to identify information in computer systems. Version 4 UUIDs are generated randomly and are practically guaranteed to be unique.
+        </p>
+      </details>
+
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>Are these UUIDs safe to use?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          Yes. They are generated completely offline using your browser's built-in <code>crypto.randomUUID()</code> function, which is cryptographically secure. Nothing is uploaded to our servers.
+        </p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    const btn = document.getElementById('generate-btn') as HTMLButtonElement;
+    const container = document.getElementById('result-container') as HTMLDivElement;
+    const select = document.getElementById('count') as HTMLSelectElement;
+
+    function render() {
+      const count = parseInt(select.value, 10);
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const uuid = crypto.randomUUID();
+        const row = document.createElement('div');
+        row.className = 'group flex items-center justify-between rounded-lg border border-transparent bg-white px-4 py-3 shadow-sm transition hover:border-indigo-200 dark:bg-gray-900 dark:hover:border-indigo-900/50';
+        
+        const span = document.createElement('span');
+        span.className = 'font-mono text-sm text-gray-800 dark:text-gray-200 selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100';
+        span.textContent = uuid;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'ml-4 rounded-md px-3 py-1.5 text-xs font-medium text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white';
+        copyBtn.textContent = 'Copy';
+        
+        copyBtn.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(uuid);
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('text-green-600', 'dark:text-green-400');
+          setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('text-green-600', 'dark:text-green-400');
+          }, 2000);
+        });
+
+        row.appendChild(span);
+        row.appendChild(copyBtn);
+        container.appendChild(row);
+      }
+    }
+    btn.addEventListener('click', render);
+    render();
+  </script>
+</BaseLayout>

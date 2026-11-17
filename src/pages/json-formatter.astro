@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="JSON Formatter & Validator — Format and Beautify JSON"
+  description="Free online JSON formatter. Format, validate, and minify JSON data instantly in your browser. Privacy-first, no uploads."
+  lang="en"
+>
+  <!-- FAQ 的 SEO 结构化数据 -->
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is JSON formatting?",
+        "acceptedAnswer": { "@type": "Answer", "text": "JSON formatting (or beautifying) involves adding indentation and line breaks to JSON data to make it easier for humans to read and debug." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does it show a JSON error?",
+        "acceptedAnswer": { "@type": "Answer", "text": "If your JSON contains syntax errors such as missing commas, single quotes instead of double quotes, or trailing commas, the tool will highlight the error." }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">JSON Formatter</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">JSON Formatter</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Paste your JSON below to format (beautify) or minify it. Invalid JSON will be highlighted with an error.
+      </p>
+    </div>
+
+    <!-- 核心操作区 -->
+    <div class="grid gap-4 lg:grid-cols-2">
+      <!-- 左侧输入 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium">Input</span>
+          <button id="clear-btn" class="text-xs text-gray-500 hover:text-red-500 transition">Clear</button>
+        </div>
+        <textarea id="input-area" class="h-[400px] w-full resize-none bg-transparent p-4 font-mono text-sm outline-none placeholder:text-gray-400" placeholder="Paste raw JSON here..."></textarea>
+      </div>
+
+      <!-- 右侧输出 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Result</span>
+          <div class="flex gap-2">
+            <button id="minify-btn" class="rounded-md bg-gray-200 px-3 py-1 text-xs font-medium transition hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700">Minify</button>
+            <button id="format-btn" class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white transition hover:bg-indigo-700">Format</button>
+            <button id="copy-btn" class="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-gray-200 dark:hover:bg-gray-800">Copy</button>
+          </div>
+        </div>
+        <textarea id="output-area" readonly class="h-[400px] w-full resize-none bg-gray-50/50 p-4 font-mono text-sm outline-none dark:bg-gray-900/50" placeholder="Formatted JSON will appear here..."></textarea>
+      </div>
+    </div>
+
+    <!-- 错误提示 -->
+    <div id="error-msg" class="mt-4 hidden rounded-lg bg-red-50 p-4 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400"></div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/uuid-generator" title="UUID Generator" desc="Generate random UUID v4 values." icon="🆔" />
+        <ToolCard href="/base64" title="Base64 Encode / Decode" desc="Convert text to and from Base64." icon="🔐" />
+      </div>
+    </div>
+
+    <!-- FAQ 常见问题展示区 -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>What is JSON formatting?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          JSON formatting (or beautifying) involves adding indentation and line breaks to JSON data to make it easier for humans to read and debug. It does not change the underlying data.
+        </p>
+      </details>
+
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>Why does it show a JSON error?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          If your JSON contains syntax errors such as missing commas, single quotes instead of double quotes, or trailing commas, the tool will highlight the error and explain why it failed.
+        </p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    const inputArea = document.getElementById('input-area') as HTMLTextAreaElement;
+    const outputArea = document.getElementById('output-area') as HTMLTextAreaElement;
+    const errorMsg = document.getElementById('error-msg') as HTMLDivElement;
+    
+    function processJSON(action: 'format' | 'minify') {
+      const raw = inputArea.value.trim();
+      if (!raw) {
+        outputArea.value = '';
+        errorMsg.classList.add('hidden');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        outputArea.value = action === 'format' 
+          ? JSON.stringify(parsed, null, 2) 
+          : JSON.stringify(parsed);
+        errorMsg.classList.add('hidden');
+      } catch (e: any) {
+        outputArea.value = '';
+        errorMsg.textContent = `Error: ${e.message}`;
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('format-btn')?.addEventListener('click', () => processJSON('format'));
+    document.getElementById('minify-btn')?.addEventListener('click', () => processJSON('minify'));
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+      inputArea.value = '';
+      outputArea.value = '';
+      errorMsg.classList.add('hidden');
+    });
+    document.getElementById('copy-btn')?.addEventListener('click', async () => {
+      if(!outputArea.value) return;
+      await navigator.clipboard.writeText(outputArea.value);
+      const btn = document.getElementById('copy-btn') as HTMLButtonElement;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  </script>
+</BaseLayout>

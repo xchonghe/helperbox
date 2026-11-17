@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="字数统计 — 在线统计中英文字数、字符与阅读时间"
+  description="免费在线字数统计工具。实时统计中英文字数、字符数、句子数、段落数，并提供预估阅读时间和关键词密度分析。"
+  lang="zh"
+>
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-6xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">字数统计</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">智能字数统计</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        在下方输入或粘贴您的文本，实时分析字数、词频和阅读时间。
+      </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      
+      <!-- 左侧输入区 -->
+      <div class="flex flex-col lg:col-span-2">
+        <div class="flex items-center justify-between rounded-t-xl border border-b-0 border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">您的文本</span>
+          <button id="clear-btn" class="text-xs text-red-500 hover:text-red-700 transition">清空</button>
+        </div>
+        <textarea id="text-input" class="h-[500px] w-full resize-none rounded-b-xl border border-gray-200 bg-white p-4 font-sans text-base outline-none focus:border-indigo-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100" placeholder="在此开始输入或粘贴您的文本..."></textarea>
+      </div>
+
+      <!-- 右侧数据统计区 -->
+      <div class="flex flex-col gap-4">
+        
+        <!-- 核心数据卡片 -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="stat-words">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">总字数</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="stat-chars">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">字符数 (含空格)</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white" id="stat-sentences">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">句子数</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white" id="stat-paragraphs">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">段落数</div>
+          </div>
+        </div>
+
+        <!-- 阅读时间 -->
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">预估阅读时间</span>
+            <span class="text-lg font-bold text-green-600 dark:text-green-400" id="stat-time">0 分钟</span>
+          </div>
+        </div>
+
+        <!-- 关键词密度 -->
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <h3 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">高频关键词</h3>
+          <div id="keyword-list" class="space-y-2 text-sm">
+            <p class="text-gray-400 italic text-xs">输入更多文本以查看关键词...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/json-formatter" title="JSON 格式化" desc="瞬间格式化并校验 JSON 数据。" icon="{ }" />
+        <ToolCard href="/zh/base64" title="Base64 编解码" desc="文本与 Base64 之间的互相转换。" icon="🔐" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>阅读时间是如何计算的？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">阅读时间是根据平均阅读速度（约每分钟 300 个中文字符或 200 个英文单词）估算出来的。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+    const statWords = document.getElementById('stat-words') as HTMLDivElement;
+    const statChars = document.getElementById('stat-chars') as HTMLDivElement;
+    const statSentences = document.getElementById('stat-sentences') as HTMLDivElement;
+    const statParagraphs = document.getElementById('stat-paragraphs') as HTMLDivElement;
+    const statTime = document.getElementById('stat-time') as HTMLSpanElement;
+    const keywordList = document.getElementById('keyword-list') as HTMLDivElement;
+
+    // 中文常用停用词（过滤掉无意义的高频字）
+    const STOP_WORDS = new Set(['的', '了', '和', '是', '就', '都', '而', '及', '与', '着', '或', '一个', '没有', '我们', '你们', '他们', '它们', '这个', '那个', '这些', '那些', '因为', '所以', '但是', '如果', '虽然', '可以', '自己', '什么', '怎么', '这样', '那样', '还是', '已经', '不是', '就是']);
+
+    function analyzeText() {
+      const text = textInput.value;
+      
+      // 1. 字符数 (含空格)
+      const chars = text.length;
+      
+      // 2. 单词数 (中文字符 + 英文单词混合)
+      const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
+      const englishWords = text.match(/[a-zA-Z]+/g) || [];
+      const words = chineseChars.length + englishWords.length;
+      
+      // 3. 句子数
+      const sentences = text.split(/[。！？.!?]+/).filter(s => s.trim().length > 0).length;
+      
+      // 4. 段落数
+      const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0).length;
+      
+      // 5. 阅读时间 (假设中文300字/分钟)
+      const time = Math.ceil(words / 300);
+      
+      // 更新 UI
+      statWords.textContent = words.toString();
+      statChars.textContent = chars.toString();
+      statSentences.textContent = sentences.toString();
+      statParagraphs.textContent = paragraphs.toString();
+      statTime.textContent = time === 0 ? '0 分钟' : `约 ${time} 分钟`;
+      
+      // 6. 关键词密度分析 (针对中文，按双字词粗略匹配，或针对英文单词)
+      if (words === 0) {
+        keywordList.innerHTML = '<p class="text-gray-400 italic text-xs">输入更多文本以查看关键词...</p>';
+        return;
+      }
+
+      const wordCounts: Record<string, number> = {};
+      
+      // 提取英文单词
+      englishWords.forEach(w => {
+        const lower = w.toLowerCase();
+        if (lower.length > 2 && !STOP_WORDS.has(lower)) {
+          wordCounts[lower] = (wordCounts[lower] || 0) + 1;
+        }
+      });
+      
+      // 简单提取中文双字词（正则匹配连续两个汉字，去除停用词）
+      const chineseWords = text.match(/[\u4e00-\u9fa5]{2}/g) || [];
+      chineseWords.forEach(w => {
+        if (!STOP_WORDS.has(w)) {
+          wordCounts[w] = (wordCounts[w] || 0) + 1;
+        }
+      });
+
+      const sortedWords = Object.entries(wordCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5); // 取前5个高频词
+
+      keywordList.innerHTML = '';
+      if (sortedWords.length === 0) {
+        keywordList.innerHTML = '<p class="text-gray-400 italic text-xs">暂无高频关键词</p>';
+        return;
+      }
+
+      const maxCount = sortedWords[0][1];
+      sortedWords.forEach(([word, count]) => {
+        const percent = Math.round((count / words) * 100);
+        const barWidth = Math.round((count / maxCount) * 100);
+        
+        const row = document.createElement('div');
+        row.className = 'flex flex-col gap-1';
+        row.innerHTML = `
+          <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
+            <span class="font-medium truncate max-w-[120px]">${word}</span>
+            <span>${count} 次 (${percent}%)</span>
+          </div>
+          <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800">
+            <div class="h-full bg-indigo-500" style="width: ${barWidth}%"></div>
+          </div>
+        `;
+        keywordList.appendChild(row);
+      });
+    }
+
+    textInput.addEventListener('input', analyzeText);
+
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+      textInput.value = '';
+      analyzeText();
+    });
+  </script>
+</BaseLayout>

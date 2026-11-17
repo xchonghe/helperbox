@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+<BaseLayout title="服务条款 - HelperBox" description="我们的服务条款" lang="zh">
+  <Header lang="zh" />
+  <main class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="mb-6 text-3xl font-bold">服务条款</h1>
+    <div class="space-y-4 text-gray-600 dark:text-gray-400">
+      <p>使用本网站即表示您同意以下条款。</p>
+      
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mt-6">1. 工具使用</h2>
+      <p>我们的工具按“原样”和“现有”状态提供。您可以免费用于个人或商业用途。我们不对您使用本工具处理的文件主张任何所有权。</p>
+      
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mt-6">2. 免责声明</h2>
+      <p>虽然我们力求 100% 的准确性，但我们对因使用本工具造成的任何数据丢失或损坏概不负责。请务必保留原始文件的备份。</p>
+    </div>
+  </main>
+  <Footer lang="zh" />
+</BaseLayout>

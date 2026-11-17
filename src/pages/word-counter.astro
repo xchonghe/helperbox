@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Word Counter — Count Words, Characters & Reading Time"
+  description="Free online word counter. Instantly count words, characters, sentences, and paragraphs. Estimate reading time and analyze keyword density in real-time."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-6xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Word Counter</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Word & Character Counter</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Paste or type your text below to instantly analyze word count, keyword density, and reading time.
+      </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      
+      <!-- 左侧输入区 -->
+      <div class="flex flex-col lg:col-span-2">
+        <div class="flex items-center justify-between rounded-t-xl border border-b-0 border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Your Text</span>
+          <button id="clear-btn" class="text-xs text-red-500 hover:text-red-700 transition">Clear</button>
+        </div>
+        <textarea id="text-input" class="h-[500px] w-full resize-none rounded-b-xl border border-gray-200 bg-white p-4 font-sans text-base outline-none focus:border-indigo-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100" placeholder="Start typing or paste your text here..."></textarea>
+      </div>
+
+      <!-- 右侧数据统计区 -->
+      <div class="flex flex-col gap-4">
+        
+        <!-- 核心数据卡片 -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="stat-words">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">Words</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="stat-chars">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">Characters</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white" id="stat-sentences">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">Sentences</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-white p-4 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white" id="stat-paragraphs">0</div>
+            <div class="mt-1 text-xs font-medium uppercase text-gray-500">Paragraphs</div>
+          </div>
+        </div>
+
+        <!-- 阅读时间 -->
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Reading Time</span>
+            <span class="text-lg font-bold text-green-600 dark:text-green-400" id="stat-time">0 min</span>
+          </div>
+        </div>
+
+        <!-- 关键词密度 -->
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <h3 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Top Keywords</h3>
+          <div id="keyword-list" class="space-y-2 text-sm">
+            <p class="text-gray-400 italic text-xs">Type more text to see keywords...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/json-formatter" title="JSON Formatter" desc="Format and validate JSON instantly." icon="{ }" />
+        <ToolCard href="/base64" title="Base64 Converter" desc="Convert text to and from Base64." icon="🔐" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>How is reading time calculated?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Reading time is estimated based on an average reading speed of 200 words per minute.</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    const textInput = document.getElementById('text-input') as HTMLTextAreaElement;
+    const statWords = document.getElementById('stat-words') as HTMLDivElement;
+    const statChars = document.getElementById('stat-chars') as HTMLDivElement;
+    const statSentences = document.getElementById('stat-sentences') as HTMLDivElement;
+    const statParagraphs = document.getElementById('stat-paragraphs') as HTMLDivElement;
+    const statTime = document.getElementById('stat-time') as HTMLSpanElement;
+    const keywordList = document.getElementById('keyword-list') as HTMLDivElement;
+
+    // 英文常用停用词（过滤掉无意义的高频词）
+    const STOP_WORDS = new Set(['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us', 'is', 'are', 'was', 'were', 'has', 'had', 'have', 'been', 'am']);
+
+    function analyzeText() {
+      const text = textInput.value;
+      
+      // 1. 字符数 (含空格)
+      const chars = text.length;
+      
+      // 2. 单词数
+      const wordsArray = text.trim().toLowerCase().match(/\b\w+\b/g) || [];
+      const words = wordsArray.length;
+      
+      // 3. 句子数
+      const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+      
+      // 4. 段落数
+      const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0).length;
+      
+      // 5. 阅读时间 (200词/分钟)
+      const time = Math.ceil(words / 200);
+      
+      // 更新 UI
+      statWords.textContent = words.toString();
+      statChars.textContent = chars.toString();
+      statSentences.textContent = sentences.toString();
+      statParagraphs.textContent = paragraphs.toString();
+      statTime.textContent = time === 0 ? '0 min' : `~ ${time} min`;
+      
+      // 6. 关键词密度分析
+      if (wordsArray.length === 0) {
+        keywordList.innerHTML = '<p class="text-gray-400 italic text-xs">Type more text to see keywords...</p>';
+        return;
+      }
+
+      const wordCounts: Record<string, number> = {};
+      wordsArray.forEach(w => {
+        if (w.length > 2 && !STOP_WORDS.has(w)) {
+          wordCounts[w] = (wordCounts[w] || 0) + 1;
+        }
+      });
+
+      const sortedWords = Object.entries(wordCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5); // 取前5个高频词
+
+      keywordList.innerHTML = '';
+      if (sortedWords.length === 0) {
+        keywordList.innerHTML = '<p class="text-gray-400 italic text-xs">No keywords found.</p>';
+        return;
+      }
+
+      const maxCount = sortedWords[0][1];
+      sortedWords.forEach(([word, count]) => {
+        const percent = Math.round((count / wordsArray.length) * 100);
+        const barWidth = Math.round((count / maxCount) * 100);
+        
+        const row = document.createElement('div');
+        row.className = 'flex flex-col gap-1';
+        row.innerHTML = `
+          <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
+            <span class="font-medium truncate max-w-[120px]">${word}</span>
+            <span>${count} (${percent}%)</span>
+          </div>
+          <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800">
+            <div class="h-full bg-indigo-500" style="width: ${barWidth}%"></div>
+          </div>
+        `;
+        keywordList.appendChild(row);
+      });
+    }
+
+    textInput.addEventListener('input', analyzeText);
+
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+      textInput.value = '';
+      analyzeText();
+    });
+  </script>
+</BaseLayout>

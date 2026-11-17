@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="图片加水印 — 在线为图片添加文字水印"
+  description="免费在线图片加水印工具。在浏览器本地瞬间为图片添加自定义文字水印，支持调整透明度、大小、颜色和平铺。"
+  lang="zh"
+>
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">图片加水印</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">图片加水印</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        为您的照片添加专属水印，保护版权。100% 在浏览器本地处理。
+      </p>
+    </div>
+
+    <!-- 上传区 -->
+    <label for="file-input" id="drop-zone" style="height: 180px;" class="relative mx-auto mb-8 flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-indigo-50/50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:border-indigo-600 dark:hover:bg-indigo-900/20">
+      <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50">
+        <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <p class="text-base font-medium text-gray-700 dark:text-gray-300">点击或将图片拖拽到这里</p>
+      <input type="file" id="file-input" accept="image/*" style="display: none;" />
+    </label>
+
+    <!-- 工作区 (默认隐藏) -->
+    <div id="workspace" class="hidden w-full min-w-0 grid gap-6 lg:grid-cols-3">
+      
+      <!-- 左侧控制面板 -->
+      <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h3 class="font-bold text-gray-900 dark:text-white">水印设置</h3>
+        
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">水印文字</label>
+          <input type="text" id="wm-text" value="© HelperBox.cc" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">颜色</label>
+            <input type="color" id="wm-color" value="#000000" class="h-9 w-full cursor-pointer rounded-md border border-gray-300 bg-transparent dark:border-gray-700" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">大小</label>
+            <input type="number" id="wm-size" value="40" min="10" max="200" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          </div>
+        </div>
+
+        <div>
+          <label id="opacity-label" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">水印透明度 (50%)</label>
+          <input type="range" id="wm-opacity" min="0" max="100" step="1" value="50" class="w-full accent-indigo-600" />
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">位置</label>
+          <select id="wm-position" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+            <option value="bottom-right">右下角</option>
+            <option value="bottom-left">左下角</option>
+            <option value="top-right">右上角</option>
+            <option value="top-left">左上角</option>
+            <option value="center">居中</option>
+            <option value="tile">全屏平铺 (倾斜)</option>
+          </select>
+        </div>
+
+        <button id="download-btn" class="mt-2 w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700 active:scale-95">
+          下载图片
+        </button>
+      </div>
+
+      <!-- 右侧预览区（老老实实的 Flex 布局，定死最大高度） -->
+      <div class="flex max-h-[60vh] min-h-[400px] w-full min-w-0 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-100 p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 lg:col-span-2">
+        <canvas id="canvas" class="max-h-full max-w-full rounded bg-white object-contain shadow-md"></canvas>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/compress-image" title="图片压缩" desc="在线压缩图片体积，不损失画质。" icon="🗜️" />
+        <ToolCard href="/zh/resize-image" title="调整尺寸" desc="在浏览器中修改图片的尺寸。" icon="📐" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>我的图片会被上传到服务器吗？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">不会。您的图片完全使用 HTML5 Canvas API 在浏览器本地处理。我们无法看到或存储您的任何文件。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const workspace = document.getElementById('workspace') as HTMLDivElement;
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    
+    const wmText = document.getElementById('wm-text') as HTMLInputElement;
+    const wmColor = document.getElementById('wm-color') as HTMLInputElement;
+    const wmSize = document.getElementById('wm-size') as HTMLInputElement;
+    const wmOpacity = document.getElementById('wm-opacity') as HTMLInputElement;
+    const wmPosition = document.getElementById('wm-position') as HTMLSelectElement;
+    const opacityLabel = document.getElementById('opacity-label');
+
+    let currentImage: HTMLImageElement | null = null;
+
+    wmOpacity.addEventListener('input', () => {
+      if(opacityLabel) opacityLabel.textContent = `水印透明度 (${wmOpacity.value}%)`;
+      render();
+    });
+
+    [wmText, wmColor, wmSize, wmPosition].forEach(el => {
+      el.addEventListener('input', render);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          currentImage = img;
+          canvas.width = img.width;
+          canvas.height = img.height;
+          workspace.classList.remove('hidden');
+          workspace.classList.add('grid');
+          render();
+        };
+        img.src = ev.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function render() {
+      if (!currentImage) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(currentImage, 0, 0);
+
+      const size = parseInt(wmSize.value) || 40;
+      ctx.font = `bold ${size}px sans-serif`;
+      ctx.fillStyle = wmColor.value;
+      
+      const opacityValue = parseInt(wmOpacity.value) / 100;
+      ctx.globalAlpha = 1 - opacityValue; 
+      
+      const padding = size * 0.5;
+      const text = wmText.value;
+      const textMetrics = ctx.measureText(text);
+      const textWidth = textMetrics.width;
+      const textHeight = size;
+
+      const pos = wmPosition.value;
+      ctx.textBaseline = 'middle';
+
+      if (pos === 'tile') {
+        const angle = -Math.PI / 6;
+        ctx.rotate(angle);
+        
+        const stepX = textWidth + size * 3;
+        const stepY = size * 4;
+        
+        for (let x = -canvas.width; x < canvas.width * 2; x += stepX) {
+          for (let y = -canvas.height; y < canvas.height * 2; y += stepY) {
+            ctx.fillText(text, x, y);
+          }
+        }
+        ctx.rotate(-angle);
+      } else {
+        let x = 0, y = 0;
+        if (pos.includes('left')) x = padding;
+        if (pos.includes('right')) x = canvas.width - textWidth - padding;
+        if (pos.includes('center')) x = (canvas.width - textWidth) / 2;
+        
+        if (pos.includes('top')) y = padding + textHeight / 2;
+        if (pos.includes('bottom')) y = canvas.height - padding - textHeight / 2;
+        if (pos.includes('center')) y = canvas.height / 2;
+
+        ctx.fillText(text, x, y);
+      }
+
+      ctx.globalAlpha = 1.0;
+    }
+
+    document.getElementById('download-btn')?.addEventListener('click', () => {
+      if (!currentImage) return;
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'watermarked-image.jpg';
+      a.click();
+    });
+  </script>
+</BaseLayout>

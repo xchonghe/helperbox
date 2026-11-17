@@ -1,0 +1,235 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Base64 编解码 — 在线转换文本与文件"
+  description="免费在线 Base64 编码与解码工具。支持将文本或文件转换为 Base64，或将 Base64 还原为文本。完全在浏览器本地运行，安全快速。"
+  lang="zh"
+>
+  <!-- FAQ 结构化数据 -->
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "什么是 Base64 编码？",
+        "acceptedAnswer": { "@type": "Answer", "text": "Base64 是一种基于 64 个可打印字符来表示二进制数据的编码方式。常用于在网页或邮件中嵌入图片或文件。" }
+      },
+      {
+        "@type": "Question",
+        "name": "为什么编码后的字符串变长了？",
+        "acceptedAnswer": { "@type": "Answer", "text": "Base64 编码会使数据体积增加约 33%，因为它每 3 个字节的数据需要用 4 个字符来表示。" }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Base64 编解码</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">Base64 编解码</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        将纯文本或文件编码为 Base64，或将 Base64 字符串解码还原。所有处理均在本地完成，保护您的数据隐私。
+      </p>
+    </div>
+
+    <!-- 模式切换 Tabs -->
+    <div class="mb-6 flex gap-2 border-b border-gray-200 dark:border-gray-800">
+      <button id="tab-text" class="border-b-2 border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 dark:border-indigo-400 dark:text-indigo-400">文本模式</button>
+      <button id="tab-file" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">文件转 Base64</button>
+    </div>
+
+    <!-- 核心操作区 -->
+    <div class="grid gap-4 lg:grid-cols-2">
+      <!-- 左侧输入 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium" id="input-label">输入文本</span>
+          <button id="clear-btn" class="text-xs text-gray-500 hover:text-red-500 transition">清空</button>
+        </div>
+        <textarea id="input-area" class="h-[350px] w-full resize-none bg-transparent p-4 font-mono text-sm outline-none placeholder:text-gray-400" placeholder="在此输入或粘贴文本..."></textarea>
+        
+        <!-- 文件上传区 (默认隐藏) -->
+        <div id="file-drop-area" class="hidden h-[350px] flex-col items-center justify-center p-4 text-center">
+          <svg class="mb-4 h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+          <p class="text-sm text-gray-600 dark:text-gray-400">拖拽文件到这里，或者</p>
+          <label class="mt-2 cursor-pointer rounded-md bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50">
+            选择文件
+            <input type="file" id="file-input" class="hidden" />
+          </label>
+        </div>
+      </div>
+
+      <!-- 右侧输出 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium text-gray-600 dark:text-gray-400">结果</span>
+          <div class="flex gap-2">
+            <button id="encode-btn" class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white transition hover:bg-indigo-700">编码</button>
+            <button id="decode-btn" class="rounded-md bg-gray-200 px-3 py-1 text-xs font-medium transition hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700">解码</button>
+            <button id="copy-btn" class="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-gray-200 dark:hover:bg-gray-800">复制</button>
+            <button id="download-btn" class="hidden rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-gray-200 dark:hover:bg-gray-800">下载</button>
+          </div>
+        </div>
+        <textarea id="output-area" readonly class="h-[350px] w-full resize-none bg-gray-50/50 p-4 font-mono text-sm outline-none dark:bg-gray-900/50" placeholder="结果将显示在这里..."></textarea>
+      </div>
+    </div>
+
+    <div id="error-msg" class="mt-4 hidden rounded-lg bg-red-50 p-4 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400"></div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/json-formatter" title="JSON 格式化" desc="瞬间格式化并校验 JSON 数据。" icon="{ }" />
+        <ToolCard href="/zh/uuid-generator" title="UUID 生成器" desc="随机生成 UUID v4 值。" icon="🆔" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>什么是 Base64 编码？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          Base64 是一种基于 64 个可打印字符来表示二进制数据的编码方式。常用于将图片或文件直接嵌入到 HTML 或 CSS 代码中。
+        </p>
+      </details>
+
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>为什么编码后的字符串变长了？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          Base64 编码会使数据体积增加约 33%，因为它每 3 个字节的数据需要用 4 个字符来表示。
+        </p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const tabText = document.getElementById('tab-text') as HTMLButtonElement;
+    const tabFile = document.getElementById('tab-file') as HTMLButtonElement;
+    const inputArea = document.getElementById('input-area') as HTMLTextAreaElement;
+    const fileDropArea = document.getElementById('file-drop-area') as HTMLDivElement;
+    const inputLabel = document.getElementById('input-label') as HTMLSpanElement;
+    const outputArea = document.getElementById('output-area') as HTMLTextAreaElement;
+    const errorMsg = document.getElementById('error-msg') as HTMLDivElement;
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const encodeBtn = document.getElementById('encode-btn') as HTMLButtonElement;
+    const decodeBtn = document.getElementById('decode-btn') as HTMLButtonElement;
+    const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+    
+    let currentMode: 'text' | 'file' = 'text';
+
+    // 切换 Tab
+    tabText.addEventListener('click', () => {
+      currentMode = 'text';
+      tabText.className = 'border-b-2 border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 dark:border-indigo-400 dark:text-indigo-400';
+      tabFile.className = 'border-b-2 border-transparent px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200';
+      inputLabel.textContent = '输入文本';
+      inputArea.classList.remove('hidden');
+      fileDropArea.classList.add('hidden');
+      fileDropArea.classList.remove('flex');
+      decodeBtn.classList.remove('hidden');
+      downloadBtn.classList.add('hidden');
+    });
+
+    tabFile.addEventListener('click', () => {
+      currentMode = 'file';
+      tabFile.className = 'border-b-2 border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 dark:border-indigo-400 dark:text-indigo-400';
+      tabText.className = 'border-b-2 border-transparent px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200';
+      inputLabel.textContent = '上传文件';
+      inputArea.classList.add('hidden');
+      fileDropArea.classList.remove('hidden');
+      fileDropArea.classList.add('flex');
+      decodeBtn.classList.add('hidden'); // 文件模式不支持解码
+      downloadBtn.classList.remove('hidden');
+    });
+
+    // 文本处理逻辑（注意处理中文乱码）
+    function processText(action: 'encode' | 'decode') {
+      const raw = inputArea.value.trim();
+      if (!raw) return;
+      try {
+        if (action === 'encode') {
+          outputArea.value = btoa(unescape(encodeURIComponent(raw)));
+        } else {
+          outputArea.value = decodeURIComponent(escape(atob(raw)));
+        }
+        errorMsg.classList.add('hidden');
+      } catch (e: any) {
+        outputArea.value = '';
+        errorMsg.textContent = `错误：输入内容无法进行${action === 'encode' ? '编码' : '解码'}。`;
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    encodeBtn.addEventListener('click', () => { if(currentMode === 'text') processText('encode'); });
+    decodeBtn.addEventListener('click', () => { if(currentMode === 'text') processText('decode'); });
+    
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+      inputArea.value = '';
+      outputArea.value = '';
+      errorMsg.classList.add('hidden');
+    });
+
+    // 复制逻辑
+    document.getElementById('copy-btn')?.addEventListener('click', async () => {
+      if(!outputArea.value) return;
+      await navigator.clipboard.writeText(outputArea.value);
+      const btn = document.getElementById('copy-btn') as HTMLButtonElement;
+      btn.textContent = '已复制！';
+      setTimeout(() => btn.textContent = '复制', 2000);
+    });
+
+    // 文件读取逻辑
+    fileInput.addEventListener('change', (e: Event) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        outputArea.value = reader.result as string;
+        errorMsg.classList.add('hidden');
+      };
+      reader.onerror = () => {
+        errorMsg.textContent = '读取文件出错。';
+        errorMsg.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 下载 Base64 为 txt
+    downloadBtn.addEventListener('click', () => {
+      if (!outputArea.value) return;
+      const blob = new Blob([outputArea.value], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'base64-output.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</BaseLayout>

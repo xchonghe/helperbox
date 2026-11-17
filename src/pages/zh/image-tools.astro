@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout title="图片工具 - HelperBox" description="免费在线图片处理工具合集" lang="zh">
+  <Header lang="zh" />
+  <main class="mx-auto max-w-6xl px-4 py-16">
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">图片工具</h1>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">完全在浏览器本地运行的隐私优先图片处理工具。</p>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <ToolCard href="/zh/compress-image" title="图片压缩" desc="在浏览器内压缩图片体积，不损失画质。" icon="🗜️" />
+      <ToolCard href="/zh/convert-image" title="格式转换" desc="在 JPG, PNG, WebP 和 AVIF 之间互相转换。" icon="🔄" />
+      <ToolCard href="/zh/resize-image" title="调整尺寸" desc="在浏览器中修改图片的尺寸。" icon="📐" />
+      <ToolCard href="/zh/watermark" title="图片加水印" desc="在浏览器内为图片添加自定义文字水印。" icon="💧" />
+    </div>
+  </main>
+  <Footer lang="zh" />
+</BaseLayout>

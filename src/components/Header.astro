@@ -1,0 +1,118 @@
+---
+import { useTranslations } from '../i18n';
+
+const isZh = Astro.url.pathname.startsWith('/zh');
+const lang = isZh ? 'zh' : 'en';
+const t = useTranslations(lang);
+
+const prefix = isZh ? '/zh' : '';
+const enPath = isZh ? (Astro.url.pathname.replace(/^\/zh/, '') || '/') : Astro.url.pathname;
+const zhPath = isZh ? Astro.url.pathname : (Astro.url.pathname === '/' ? '/zh/' : `/zh${Astro.url.pathname}`);
+const otherLangHref = isZh ? enPath : zhPath;
+---
+<header class="sticky top-0 z-40 border-b border-gray-200/70 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-950/80">
+  <!-- 注意这里加了 relative，为了让下拉菜单能精确定位 -->
+  <div class="relative mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
+    <!-- Logo -->
+    <a href={isZh ? '/zh/' : '/'} class="text-lg font-bold tracking-tight">
+      {t.siteName}
+    </a>
+
+    <!-- 桌面端导航 -->
+    <nav class="hidden gap-5 text-sm text-gray-600 md:flex dark:text-gray-400">
+      <a href={`${prefix}/image-tools`} class="transition hover:text-indigo-600">{t.nav.image}</a>
+      <a href={`${prefix}/pdf-tools`} class="transition hover:text-indigo-600">{t.nav.pdf}</a>
+      <a href={`${prefix}/developer-tools`} class="transition hover:text-indigo-600">{t.nav.dev}</a>
+    </nav>
+
+    <!-- 右侧功能区 -->
+    <div class="ml-auto flex items-center gap-3">
+      <a href={otherLangHref} class="text-sm text-gray-600 hover:text-indigo-600 dark:text-gray-400">
+        {isZh ? 'EN' : '中文'}
+      </a>
+      <button
+        onclick="window.toggleTheme()"
+        class="rounded-md border border-gray-200 p-1.5 text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+        aria-label="Toggle theme"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
+
+      <!-- 手机端汉堡按钮 -->
+      <button id="mobile-menu-btn" class="rounded-md p-1.5 text-gray-600 hover:bg-gray-100 md:hidden dark:text-gray-300 dark:hover:bg-gray-800">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+
+    <!-- ================= 手机端下拉菜单 ================= -->
+    <!-- 
+      修改宽度：更改 w-48（约192px）为你想要的类，比如 w-40（约160px）或 w-56（约224px）。
+      高度不需要设置，会自动根据里面的分类数量撑开。
+      定位：absolute right-4 top-full 表示定在父容器右侧，紧贴着头部下方。
+    -->
+    <div id="mobile-dropdown" class="absolute right-4 top-full mt-1 hidden w-48 origin-top-right scale-95 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white opacity-0 shadow-lg transition-all duration-200 ease-out md:hidden dark:border-gray-700 dark:bg-gray-800">
+      <a href={`${prefix}/image-tools`} class="flex items-center gap-3 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700/50">
+        <span class="text-xl">🖼️</span> {t.nav.image}
+      </a>
+      <a href={`${prefix}/pdf-tools`} class="flex items-center gap-3 border-t border-gray-100 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700/50">
+        <span class="text-xl">📄</span> {t.nav.pdf}
+      </a>
+      <a href={`${prefix}/developer-tools`} class="flex items-center gap-3 border-t border-gray-100 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700/50">
+        <span class="text-xl">💻</span> {t.nav.dev}
+      </a>
+    </div>
+
+  </div>
+
+  <!-- 控制菜单展开/收起及点击外部关闭 -->
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const dropdown = document.getElementById('mobile-dropdown');
+
+    function toggleMenu() {
+      if (!dropdown) return;
+      
+      const isHidden = dropdown.classList.contains('hidden');
+      
+      if (isHidden) {
+        // 展开：先显示元素，然后利用 requestAnimationFrame 让动画流畅执行
+        dropdown.classList.remove('hidden');
+        dropdown.classList.add('flex');
+        requestAnimationFrame(() => {
+          dropdown.classList.remove('scale-95', 'opacity-0');
+          dropdown.classList.add('scale-100', 'opacity-100');
+        });
+      } else {
+        // 收起
+        dropdown.classList.remove('scale-100', 'opacity-100');
+        dropdown.classList.add('scale-95', 'opacity-0');
+        
+        // 等待动画结束（200ms）后再隐藏元素
+        setTimeout(() => {
+          dropdown.classList.add('hidden');
+          dropdown.classList.remove('flex');
+        }, 200);
+      }
+    }
+
+    // 点击汉堡按钮：切换菜单
+    btn?.addEventListener('click', (e) => {
+      e.stopPropagation(); // 阻止事件冒泡，防止触发下面的 document 点击
+      toggleMenu();
+    });
+
+    // 点击页面空白处：自动关闭菜单
+    document.addEventListener('click', (e) => {
+      if (dropdown && !dropdown.classList.contains('hidden')) {
+        const target = e.target as HTMLElement;
+        // 如果点击的不是按钮本身，且不在菜单内部
+        if (!btn?.contains(target) && !dropdown.contains(target)) {
+          toggleMenu();
+        }
+      }
+    });
+  </script>
+</header>

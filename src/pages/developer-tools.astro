@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout title="Developer Tools" description="Free online developer tools." lang="en">
+  <Header lang="en" />
+  <main class="mx-auto max-w-6xl px-4 py-16">
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Developer Tools</h1>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">A powerful HelperBox to boost your development efficiency.</p>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <ToolCard href="/json-formatter" title="JSON Formatter" desc="Format and validate JSON instantly." icon="{ }" />
+      <ToolCard href="/base64" title="Base64 Converter" desc="Convert text to and from Base64." icon="🔐" />
+      <ToolCard href="/uuid-generator" title="UUID Generator" desc="Generate random UUID v4 values." icon="🆔" />
+      <ToolCard href="/timestamp" title="Timestamp Converter" desc="Convert Unix timestamps to dates." icon="🕒" />
+      <ToolCard href="/url-encode" title="URL Encoder" desc="Encode or decode URL components." icon="🔗" />
+      <ToolCard href="/password-generator" title="Password Generator" desc="Create strong and secure random passwords." icon="🔑" />
+      <ToolCard href="/word-counter" title="Word Counter" desc="Count words, characters, and reading time." icon="📝" />
+      <ToolCard href="/color-converter" title="Color Converter" desc="Convert HEX, RGB, HSL and generate palettes." icon="🎨" />
+    </div>
+  </main>
+  <Footer lang="en" />
+</BaseLayout>

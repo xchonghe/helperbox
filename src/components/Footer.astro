@@ -1,0 +1,20 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+interface Props { lang?: Lang }
+const lang = Astro.props.lang ?? 'en';
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+// 核心修复：加前缀
+const prefix = lang === 'en' ? '' : '/zh';
+---
+<footer class="mt-20 border-t border-gray-200 py-10 dark:border-gray-800">
+  <div class="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-sm text-gray-500 dark:text-gray-400">
+    <div class="flex gap-5">
+      <!-- 这里加上了 prefix -->
+      <a href={`${prefix}/privacy`} class="hover:text-indigo-600">{t.footer.privacy}</a>
+      <a href={`${prefix}/terms`} class="hover:text-indigo-600">{t.footer.terms}</a>
+    </div>
+    <p>© {year} {t.siteName}. {t.footer.copyright}</p>
+  </div>
+</footer>

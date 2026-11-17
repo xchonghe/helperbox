@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="URL 编解码 — 在线网址转换与解析"
+  description="免费在线 URL 编码解码工具。安全地将网址或参数进行编码解码，支持完整网址和参数值两种模式。"
+  lang="zh"
+>
+  <script type="application/ld+json" slot="head">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "什么是 URL 编码？",
+        "acceptedAnswer": { "@type": "Answer", "text": "URL 编码会将字符转换为可以通过互联网安全传输的格式，将不安全的字符替换为百分号加上十六进制数字。" }
+      },
+      {
+        "@type": "Question",
+        "name": "encodeURI 和 encodeURIComponent 有什么区别？",
+        "acceptedAnswer": { "@type": "Answer", "text": "encodeURI 用于编码完整的网址，会保留如 : 和 / 等结构字符。而 encodeURIComponent 用于编码具体的参数值，会将这些结构字符也进行编码。" }
+      }
+    ]
+  }
+  </script>
+
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">URL 编解码</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">URL 编解码</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        瞬间完成 URL 编码或解码，所有操作均在浏览器本地完成。
+      </p>
+    </div>
+
+    <!-- 双栏操作区 -->
+    <div class="grid gap-4 lg:grid-cols-2">
+      <!-- 左侧输入 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium">输入</span>
+          <button id="clear-btn" class="text-xs text-gray-500 hover:text-red-500 transition">清空</button>
+        </div>
+        <textarea id="input-area" class="h-[300px] w-full resize-none bg-transparent p-4 font-mono text-sm outline-none placeholder:text-gray-400" placeholder="在此粘贴网址或文本..."></textarea>
+      </div>
+
+      <!-- 右侧输出 -->
+      <div class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="text-sm font-medium text-gray-600 dark:text-gray-400">结果</span>
+          <div class="flex gap-2">
+            <button id="encode-btn" class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white transition hover:bg-indigo-700">编码</button>
+            <button id="decode-btn" class="rounded-md bg-gray-200 px-3 py-1 text-xs font-medium transition hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700">解码</button>
+            <button id="copy-btn" class="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-gray-200 dark:hover:bg-gray-800">复制</button>
+          </div>
+        </div>
+        <textarea id="output-area" readonly class="h-[300px] w-full resize-none bg-gray-50/50 p-4 font-mono text-sm outline-none dark:bg-gray-900/50" placeholder="结果将显示在这里..."></textarea>
+      </div>
+    </div>
+
+    <div class="mt-4 flex items-center gap-4">
+      <label class="flex cursor-pointer items-center gap-2 text-sm font-medium">
+        <input type="radio" name="mode" value="component" checked class="accent-indigo-600" />
+        <span>URL 参数模式 (encodeURIComponent)</span>
+      </label>
+      <label class="flex cursor-pointer items-center gap-2 text-sm font-medium">
+        <input type="radio" name="mode" value="full" class="accent-indigo-600" />
+        <span>完整网址模式 (encodeURI)</span>
+      </label>
+    </div>
+
+    <div id="error-msg" class="mt-4 hidden rounded-lg bg-red-50 p-4 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400"></div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>什么是 URL 编码？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">URL 编码会将不安全的字符替换为“%”加上两位十六进制数字，确保数据能在互联网上安全传输。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const inputArea = document.getElementById('input-area') as HTMLTextAreaElement;
+    const outputArea = document.getElementById('output-area') as HTMLTextAreaElement;
+    const errorMsg = document.getElementById('error-msg') as HTMLDivElement;
+
+    function process(action: 'encode' | 'decode') {
+      const raw = inputArea.value.trim();
+      if (!raw) return;
+      
+      const isComponent = (document.querySelector('input[name="mode"]:checked') as HTMLInputElement).value === 'component';
+
+      try {
+        if (action === 'encode') {
+          outputArea.value = isComponent ? encodeURIComponent(raw) : encodeURI(raw);
+        } else {
+          outputArea.value = isComponent ? decodeURIComponent(raw) : decodeURI(raw);
+        }
+        errorMsg.classList.add('hidden');
+      } catch (e: any) {
+        outputArea.value = '';
+        errorMsg.textContent = `错误：无效的 URL 编码格式。`;
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('encode-btn')?.addEventListener('click', () => process('encode'));
+    document.getElementById('decode-btn')?.addEventListener('click', () => process('decode'));
+    
+    document.getElementById('clear-btn')?.addEventListener('click', () => {
+      inputArea.value = '';
+      outputArea.value = '';
+      errorMsg.classList.add('hidden');
+    });
+
+    document.getElementById('copy-btn')?.addEventListener('click', async () => {
+      if(!outputArea.value) return;
+      await navigator.clipboard.writeText(outputArea.value);
+      const btn = document.getElementById('copy-btn') as HTMLButtonElement;
+      btn.textContent = '已复制！';
+      setTimeout(() => btn.textContent = '复制', 2000);
+    });
+  </script>
+</BaseLayout>

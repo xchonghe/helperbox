@@ -1,0 +1,18 @@
+{
+  "siteName": "HelperBox",
+  "nav": {
+    "image": "图片",
+    "pdf": "PDF",
+    "dev": "开发者"
+  },
+  "hero": {
+    "title": "所有文件工具，都在你的浏览器里。",
+    "subtitle": "不上传、不注册、完全私密。",
+    "searchPlaceholder": "搜索工具..."
+  },
+  "footer": {
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "copyright": "保留所有权利。"
+  }
+}
