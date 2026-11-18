@@ -4,8 +4,7 @@
     "image": "Image",
     "pdf": "PDF",
     "dev": "Developer",
-    "calc": "Calculators",
-    "media": "Media"
+    "calc": "Calculators"
   },
   "hero": {
     "title": "All your file tools, right in your browser.",
