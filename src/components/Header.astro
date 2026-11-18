@@ -23,6 +23,8 @@ const otherLangHref = isZh ? enPath : zhPath;
       <a href={`${prefix}/image-tools`} class="transition hover:text-indigo-600">{t.nav.image}</a>
       <a href={`${prefix}/pdf-tools`} class="transition hover:text-indigo-600">{t.nav.pdf}</a>
       <a href={`${prefix}/developer-tools`} class="transition hover:text-indigo-600">{t.nav.dev}</a>
+      <a href={`${prefix}/calculators`} class="transition hover:text-indigo-600">{t.nav.calc}</a>
+      <a href={`${prefix}/media-tools`} class="transition hover:text-indigo-600">{t.nav.media}</a>
     </nav>
 
     <!-- 右侧功能区 -->
@@ -53,7 +55,7 @@ const otherLangHref = isZh ? enPath : zhPath;
       高度不需要设置，会自动根据里面的分类数量撑开。
       定位：absolute right-4 top-full 表示定在父容器右侧，紧贴着头部下方。
     -->
-    <div id="mobile-dropdown" class="absolute right-4 top-full mt-1 hidden w-48 origin-top-right scale-95 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white opacity-0 shadow-lg transition-all duration-200 ease-out md:hidden dark:border-gray-700 dark:bg-gray-800">
+    <div id="mobile-dropdown" class="absolute right-4 top-full mt-1 hidden w-40 origin-top-right scale-95 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white opacity-0 shadow-lg transition-all duration-200 ease-out md:hidden dark:border-gray-700 dark:bg-gray-800">
       <a href={`${prefix}/image-tools`} class="flex items-center gap-3 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700/50">
         <span class="text-xl">🖼️</span> {t.nav.image}
       </a>
@@ -62,6 +64,12 @@ const otherLangHref = isZh ? enPath : zhPath;
       </a>
       <a href={`${prefix}/developer-tools`} class="flex items-center gap-3 border-t border-gray-100 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700/50">
         <span class="text-xl">💻</span> {t.nav.dev}
+      </a>
+      <a href={`${prefix}/calculators`} class="flex items-center gap-3 border-t border-gray-100 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700/50">
+        <span class="text-xl">🧮</span> {t.nav.calc}
+      </a>
+      <a href={`${prefix}/media-tools`} class="flex items-center gap-3 border-t border-gray-100 px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700/50">
+        <span class="text-xl">🎵</span> {t.nav.media}
       </a>
     </div>
 

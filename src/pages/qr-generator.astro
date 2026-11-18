@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="QR Code Generator — Free & Customizable"
+  description="Free online QR code generator. Create custom QR codes with different colors and sizes. Download high-resolution PNGs instantly, 100% locally."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">QR Code Generator</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">QR Code Generator</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Generate custom QR codes for URLs, text, or Wi-Fi. High resolution and 100% private.
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      
+      <!-- 左侧控制面板 -->
+      <div class="flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Content (URL / Text)</label>
+          <textarea id="qr-content" rows="4" class="w-full resize-none rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:text-white" placeholder="https://www.helperbox.cc">https://www.helperbox.cc</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Foreground Color</label>
+            <input type="color" id="qr-fg" value="#000000" class="h-10 w-full cursor-pointer rounded-md border border-gray-300 dark:border-gray-700" />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Background Color</label>
+            <input type="color" id="qr-bg" value="#ffffff" class="h-10 w-full cursor-pointer rounded-md border border-gray-300 dark:border-gray-700" />
+          </div>
+        </div>
+
+        <!-- 改成了下拉选择框 -->
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Size (px)</label>
+          <select id="qr-size" class="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:text-white dark:bg-gray-900">
+            <option value="128">128 x 128</option>
+            <option value="256">256 x 256</option>
+            <option value="512" selected>512 x 512 (Recommended)</option>
+            <option value="1024">1024 x 1024 (HD)</option>
+            <option value="2048">2048 x 2048 (Ultra HD)</option>
+          </select>
+        </div>
+
+        <button id="generate-btn" class="mt-2 w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-medium text-white transition hover:bg-indigo-700 active:scale-95">
+          Generate QR Code
+        </button>
+
+      </div>
+
+      <!-- 右侧预览区 -->
+      <div class="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900/50">
+        <div class="relative flex aspect-square w-full max-w-[320px] items-center justify-center overflow-hidden rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+          <canvas id="qr-canvas" class="hidden max-h-full max-w-full"></canvas>
+          <div id="qr-placeholder" class="text-center text-gray-400 text-sm px-4">Click "Generate"<br/>to see result</div>
+        </div>
+        
+        <button id="download-btn" class="hidden mt-6 w-full max-w-[320px] items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-3 font-medium text-white transition hover:bg-gray-800 active:scale-95 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Download PNG
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/url-encode" title="URL Encoder" desc="Encode or decode URL components." icon="🔗" />
+        <ToolCard href="/password-generator" title="Password Generator" desc="Create strong and secure random passwords." icon="🔑" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>Do these QR codes expire?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">No, they are static QR codes generated locally. They will never expire and do not rely on any third-party servers.</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    import QRCode from 'qrcode';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const contentInput = document.getElementById('qr-content') as HTMLTextAreaElement;
+      const fgInput = document.getElementById('qr-fg') as HTMLInputElement;
+      const bgInput = document.getElementById('qr-bg') as HTMLInputElement;
+      const sizeInput = document.getElementById('qr-size') as HTMLSelectElement;
+      
+      const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+      const placeholder = document.getElementById('qr-placeholder') as HTMLDivElement;
+      const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+      const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+
+      async function renderQR() {
+        const text = contentInput.value || ' ';
+        const size = parseInt(sizeInput.value);
+
+        try {
+          await QRCode.toCanvas(canvas, text, {
+            width: size,
+            margin: 2,
+            color: {
+              dark: fgInput.value,
+              light: bgInput.value
+            }
+          });
+          canvas.classList.remove('hidden');
+          downloadBtn.classList.remove('hidden');
+          downloadBtn.classList.add('flex');
+          placeholder.classList.add('hidden');
+        } catch (err) {
+          console.error('QR generation failed:', err);
+        }
+      }
+
+      generateBtn.addEventListener('click', renderQR);
+
+      downloadBtn.addEventListener('click', () => {
+        const dataUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = 'qrcode-helperbox.png';
+        a.click();
+      });
+
+      renderQR();
+    });
+  </script>
+</BaseLayout>

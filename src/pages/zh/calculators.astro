@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout title="计算器 - ToolBox" description="免费在线数学和百分比计算器。" lang="zh">
+  <Header lang="zh" />
+  <main class="mx-auto max-w-6xl px-4 py-16">
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">计算器</h1>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">搞定日常生活和工作中的各种计算。</p>
+    </div>
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <ToolCard href="/zh/percentage-calculator" title="百分比计算器" desc="瞬间解决各种百分比计算问题。" icon="🧮" />
+    </div>
+  </main>
+  <Footer lang="zh" />
+</BaseLayout>

@@ -3,7 +3,9 @@
   "nav": {
     "image": "Image",
     "pdf": "PDF",
-    "dev": "Developer"
+    "dev": "Developer",
+    "calc": "Calculators",
+    "media": "Media"
   },
   "hero": {
     "title": "All your file tools, right in your browser.",

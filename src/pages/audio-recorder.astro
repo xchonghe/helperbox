@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Voice Recorder — Record Audio with Visualizer"
+  description="Free online voice recorder. Record your microphone and see real-time audio visualization. Download your recordings locally."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/media-tools" class="hover:text-indigo-600">Media Tools</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Voice Recorder</span>
+    </nav>
+
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Voice Recorder</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Click the microphone to start recording. Your audio stays 100% on your device.
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      
+      <!-- 计时器 -->
+      <div id="timer" class="font-mono text-4xl font-bold text-gray-900 dark:text-white">00:00.0</div>
+
+      <!-- 可视化 Canvas -->
+      <div class="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800">
+        <canvas id="visualizer" class="h-full w-full"></canvas>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="flex items-center gap-6">
+        <button id="record-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition hover:scale-105 hover:bg-red-600">
+          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.39-.9.88 0 2.76-2.24 5.02-5 5.02s-5-2.26-5-5.02c0-.49-.41-.88-.9-.88s-.9.39-.9.88c0 3.28 2.44 5.99 5.6 6.44v3.06h-2.1c-.49 0-.9.41-.9.9s.41.9.9.9h6c.49 0 .9-.41.9-.9s-.41-.9-.9-.9h-2.1v-3.06c3.16-.45 5.6-3.16 5.6-6.44 0-.49-.41-.88-.9-.88z"/></svg>
+        </button>
+        
+        <button id="stop-btn" class="hidden h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-white shadow-lg transition hover:scale-105 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600">
+          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+      </div>
+
+      <!-- 录音回放区 (默认隐藏) -->
+      <div id="playback-area" class="hidden w-full flex-col items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
+        <audio id="audio-playback" controls class="w-full max-w-md"></audio>
+        <a id="download-btn" href="#" download="recording.webm" class="mt-2 rounded-xl bg-indigo-600 px-8 py-3 font-medium text-white transition hover:bg-indigo-700">
+          Download Recording
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/image-watermark" title="Image Watermark" desc="Add custom text watermarks to photos." icon="💧" />
+        <ToolCard href="/word-counter" title="Word Counter" desc="Count words and characters." icon="📝" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>Is my audio uploaded to a server?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">No. The recording is processed entirely in your browser using the MediaRecorder API. Nothing is uploaded.</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    const recordBtn = document.getElementById('record-btn') as HTMLButtonElement;
+    const stopBtn = document.getElementById('stop-btn') as HTMLButtonElement;
+    const timerEl = document.getElementById('timer') as HTMLDivElement;
+    const playbackArea = document.getElementById('playback-area') as HTMLDivElement;
+    const audioPlayback = document.getElementById('audio-playback') as HTMLAudioElement;
+    const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+    const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
+    const canvasCtx = canvas.getContext('2d')!;
+
+    let mediaRecorder: MediaRecorder;
+    let audioChunks: Blob[] = [];
+    let startTime: number;
+    let timerInterval: number;
+    let animationFrame: number;
+    
+    // 音频环境
+    let audioContext: AudioContext;
+    let analyser: AnalyserNode;
+    let dataArray: Uint8Array;
+    let source: MediaStreamAudioSourceNode;
+
+    function updateTimer() {
+      const now = performance.now();
+      const diff = now - startTime;
+      const seconds = Math.floor(diff / 1000);
+      const tenths = Math.floor((diff % 1000) / 100);
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${tenths}`;
+    }
+
+    function drawVisualizer() {
+      animationFrame = requestAnimationFrame(drawVisualizer);
+      
+      analyser.getByteTimeDomainData(dataArray);
+      
+      canvasCtx.fillStyle = getComputedStyle(document.documentElement).classList.contains('dark') ? '#1f2937' : '#f9fafb';
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      canvasCtx.lineWidth = 2;
+      canvasCtx.strokeStyle = '#6366f1';
+      canvasCtx.beginPath();
+      
+      const sliceWidth = canvas.width * 1.0 / dataArray.length;
+      let x = 0;
+      
+      for (let i = 0; i < dataArray.length; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = v * canvas.height / 2;
+        
+        if (i === 0) {
+          canvasCtx.moveTo(x, y);
+        } else {
+          canvasCtx.lineTo(x, y);
+        }
+        x += sliceWidth;
+      }
+      
+      canvasCtx.lineTo(canvas.width, canvas.height / 2);
+      canvasCtx.stroke();
+    }
+
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // 初始化音频可视化
+        audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048;
+        dataArray = new Uint8Array(analyser.fftSize);
+        source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        
+        // 适配 Canvas 分辨率
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        drawVisualizer();
+
+        // 录音逻辑
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          
+          audioPlayback.src = audioUrl;
+          downloadBtn.href = audioUrl;
+          playbackArea.classList.remove('hidden');
+          playbackArea.classList.add('flex');
+
+          // 关闭麦克风
+          stream.getTracks().forEach(track => track.stop());
+          audioContext.close();
+        };
+
+        mediaRecorder.start();
+        startTime = performance.now();
+        timerInterval = window.setInterval(updateTimer, 100);
+
+        recordBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        stopBtn.classList.add('flex');
+        playbackArea.classList.add('hidden');
+        playbackArea.classList.remove('flex');
+
+      } catch (err) {
+        alert('Microphone access denied or not available. Please ensure you are using HTTPS or localhost.');
+        console.error(err);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        clearInterval(timerInterval);
+        cancelAnimationFrame(animationFrame);
+        
+        stopBtn.classList.add('hidden');
+        stopBtn.classList.remove('flex');
+        recordBtn.classList.remove('hidden');
+        
+        // 清空 Canvas
+        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    recordBtn.addEventListener('click', startRecording);
+    stopBtn.addEventListener('click', stopRecording);
+  </script>
+</BaseLayout>

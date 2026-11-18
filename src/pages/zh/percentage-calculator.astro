@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="百分比计算器 — 轻松解决百分比问题"
+  description="免费在线百分比计算器。快速计算 X 是 Y 的百分之几、Y 的 X% 是多少，以及百分比的增减变化。"
+  lang="zh"
+>
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <a href="/zh/calculators" class="hover:text-indigo-600">计算器</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">百分比计算器</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">百分比计算器</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        瞬间解决三种最常见的百分比计算问题。
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      
+      <!-- 卡片 1：X% of Y -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Y 的 X% 是多少？</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <input type="number" id="calc1-x" placeholder="20" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">% 的</span>
+          <input type="number" id="calc1-y" placeholder="500" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">是多少？</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc1-result">= 0</span>
+        </div>
+      </div>
+
+      <!-- 卡片 2：X is what percent of Y -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">X 是 Y 的百分之几？</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <input type="number" id="calc2-x" placeholder="30" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">是</span>
+          <input type="number" id="calc2-y" placeholder="150" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">的百分之几？</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc2-result">= 0%</span>
+        </div>
+      </div>
+
+      <!-- 卡片 3：Percentage Increase/Decrease -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">百分比增减变化</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <span class="text-gray-600 dark:text-gray-400">从</span>
+          <input type="number" id="calc3-x" placeholder="100" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">变到</span>
+          <input type="number" id="calc3-y" placeholder="120" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">变化了多少？</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc3-result">= 0%</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/word-counter" title="字数统计" desc="实时统计字数、词频和阅读时间。" icon="📝" />
+        <ToolCard href="/zh/timestamp" title="时间戳转换" desc="把 Unix 时间戳转换为日期。" icon="🕒" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>百分比是如何计算的？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">百分比是通过将部分除以总数，再乘以 100 来计算的。例如，100 里面的 20 是 (20/100) * 100 = 20%。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const c1x = document.getElementById('calc1-x') as HTMLInputElement;
+    const c1y = document.getElementById('calc1-y') as HTMLInputElement;
+    const c1res = document.getElementById('calc1-result') as HTMLSpanElement;
+    function calc1() {
+      const x = parseFloat(c1x.value) || 0;
+      const y = parseFloat(c1y.value) || 0;
+      const res = (x / 100) * y;
+      c1res.textContent = `= ${parseFloat(res.toFixed(4))}`;
+    }
+    c1x.addEventListener('input', calc1);
+    c1y.addEventListener('input', calc1);
+
+    const c2x = document.getElementById('calc2-x') as HTMLInputElement;
+    const c2y = document.getElementById('calc2-y') as HTMLInputElement;
+    const c2res = document.getElementById('calc2-result') as HTMLSpanElement;
+    function calc2() {
+      const x = parseFloat(c2x.value) || 0;
+      const y = parseFloat(c2y.value) || 0;
+      if (y === 0) { c2res.textContent = '= 无限大'; return; }
+      const res = (x / y) * 100;
+      c2res.textContent = `= ${parseFloat(res.toFixed(2))}%`;
+    }
+    c2x.addEventListener('input', calc2);
+    c2y.addEventListener('input', calc2);
+
+    const c3x = document.getElementById('calc3-x') as HTMLInputElement;
+    const c3y = document.getElementById('calc3-y') as HTMLInputElement;
+    const c3res = document.getElementById('calc3-result') as HTMLSpanElement;
+    function calc3() {
+      const x = parseFloat(c3x.value) || 0;
+      const y = parseFloat(c3y.value) || 0;
+      if (x === 0) { c3res.textContent = '= 无法计算'; return; }
+      const res = ((y - x) / x) * 100;
+      const type = res >= 0 ? '增加' : '减少';
+      c3res.textContent = `= ${type} ${Math.abs(parseFloat(res.toFixed(2)))}%`;
+    }
+    c3x.addEventListener('input', calc3);
+    c3y.addEventListener('input', calc3);
+  </script>
+</BaseLayout>

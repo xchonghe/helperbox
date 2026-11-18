@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout title="Calculators" description="Free online math and percentage calculators." lang="en">
+  <Header lang="en" />
+  <main class="mx-auto max-w-6xl px-4 py-16">
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Calculators</h1>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">Everyday math and percentage calculators.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <ToolCard href="/percentage-calculator" title="Percentage Calculator" desc="Solve percentage problems instantly." icon="🧮" />
+    </div>
+  </main>
+  <Footer lang="en" />
+</BaseLayout>

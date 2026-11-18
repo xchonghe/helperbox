@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Percentage Calculator — Solve Percentage Problems"
+  description="Free online percentage calculator. Find X% of Y, what percent X is of Y, and percentage increase or decrease."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/calculators" class="hover:text-indigo-600">Calculators</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Percentage Calculator</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Percentage Calculator</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Solve three common percentage problems instantly.
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      
+      <!-- 卡片 1：X% of Y -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">What is X% of Y?</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <span class="text-gray-600 dark:text-gray-400">What is</span>
+          <input type="number" id="calc1-x" placeholder="20" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">% of</span>
+          <input type="number" id="calc1-y" placeholder="500" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">?</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc1-result">= 0</span>
+        </div>
+      </div>
+
+      <!-- 卡片 2：X is what percent of Y -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">X is what percent of Y?</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <input type="number" id="calc2-x" placeholder="30" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">is what percent of</span>
+          <input type="number" id="calc2-y" placeholder="150" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">?</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc2-result">= 0%</span>
+        </div>
+      </div>
+
+      <!-- 卡片 3：Percentage Increase/Decrease -->
+      <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Percentage Increase / Decrease</h2>
+        <div class="flex flex-wrap items-center gap-3 text-base">
+          <span class="text-gray-600 dark:text-gray-400">From</span>
+          <input type="number" id="calc3-x" placeholder="100" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">to</span>
+          <input type="number" id="calc3-y" placeholder="120" class="w-24 rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+          <span class="text-gray-600 dark:text-gray-400">?</span>
+          <span class="font-bold text-indigo-600 dark:text-indigo-400 ml-auto text-xl" id="calc3-result">= 0%</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/word-counter" title="Word Counter" desc="Count words and characters." icon="📝" />
+        <ToolCard href="/timestamp" title="Timestamp Converter" desc="Convert Unix timestamps to dates." icon="🕒" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>How is percentage calculated?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Percentage is calculated by dividing the part by the whole and multiplying by 100. For example, 20 out of 100 is (20/100) * 100 = 20%.</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    // 1. X% of Y
+    const c1x = document.getElementById('calc1-x') as HTMLInputElement;
+    const c1y = document.getElementById('calc1-y') as HTMLInputElement;
+    const c1res = document.getElementById('calc1-result') as HTMLSpanElement;
+    function calc1() {
+      const x = parseFloat(c1x.value) || 0;
+      const y = parseFloat(c1y.value) || 0;
+      const res = (x / 100) * y;
+      c1res.textContent = `= ${parseFloat(res.toFixed(4))}`;
+    }
+    c1x.addEventListener('input', calc1);
+    c1y.addEventListener('input', calc1);
+
+    // 2. X is what percent of Y
+    const c2x = document.getElementById('calc2-x') as HTMLInputElement;
+    const c2y = document.getElementById('calc2-y') as HTMLInputElement;
+    const c2res = document.getElementById('calc2-result') as HTMLSpanElement;
+    function calc2() {
+      const x = parseFloat(c2x.value) || 0;
+      const y = parseFloat(c2y.value) || 0;
+      if (y === 0) { c2res.textContent = '= Infinity'; return; }
+      const res = (x / y) * 100;
+      c2res.textContent = `= ${parseFloat(res.toFixed(2))}%`;
+    }
+    c2x.addEventListener('input', calc2);
+    c2y.addEventListener('input', calc2);
+
+    // 3. Increase / Decrease
+    const c3x = document.getElementById('calc3-x') as HTMLInputElement;
+    const c3y = document.getElementById('calc3-y') as HTMLInputElement;
+    const c3res = document.getElementById('calc3-result') as HTMLSpanElement;
+    function calc3() {
+      const x = parseFloat(c3x.value) || 0;
+      const y = parseFloat(c3y.value) || 0;
+      if (x === 0) { c3res.textContent = '= N/A'; return; }
+      const res = ((y - x) / x) * 100;
+      const type = res >= 0 ? 'increase' : 'decrease';
+      c3res.textContent = `= ${Math.abs(parseFloat(res.toFixed(2)))}% ${type}`;
+    }
+    c3x.addEventListener('input', calc3);
+    c3y.addEventListener('input', calc3);
+  </script>
+</BaseLayout>

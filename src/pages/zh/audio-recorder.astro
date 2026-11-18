@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="语音录音机 — 带实时声波可视化"
+  description="免费在线语音录音工具。调用麦克风录音，实时显示炫酷声波，一键下载录音文件，100% 保护隐私。"
+  lang="zh"
+>
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <a href="/zh/media-tools" class="hover:text-indigo-600">媒体工具</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">语音录音机</span>
+    </nav>
+
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">语音录音机</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        点击麦克风开始录音，所有音频均保留在您的设备上，绝不上传。
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      
+      <!-- 计时器 -->
+      <div id="timer" class="font-mono text-4xl font-bold text-gray-900 dark:text-white">00:00.0</div>
+
+      <!-- 可视化 Canvas -->
+      <div class="relative flex h-32 w-full items-center justify-center overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800">
+        <canvas id="visualizer" class="h-full w-full"></canvas>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="flex items-center gap-6">
+        <button id="record-btn" class="flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition hover:scale-105 hover:bg-red-600">
+          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.39-.9.88 0 2.76-2.24 5.02-5 5.02s-5-2.26-5-5.02c0-.49-.41-.88-.9-.88s-.9.39-.9.88c0 3.28 2.44 5.99 5.6 6.44v3.06h-2.1c-.49 0-.9.41-.9.9s.41.9.9.9h6c.49 0 .9-.41.9-.9s-.41-.9-.9-.9h-2.1v-3.06c3.16-.45 5.6-3.16 5.6-6.44 0-.49-.41-.88-.9-.88z"/></svg>
+        </button>
+        
+        <button id="stop-btn" class="hidden h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-white shadow-lg transition hover:scale-105 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600">
+          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+      </div>
+
+      <!-- 录音回放区 (默认隐藏) -->
+      <div id="playback-area" class="hidden w-full flex-col items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
+        <audio id="audio-playback" controls class="w-full max-w-md"></audio>
+        <a id="download-btn" href="#" download="recording.webm" class="mt-2 rounded-xl bg-indigo-600 px-8 py-3 font-medium text-white transition hover:bg-indigo-700">
+          下载录音文件
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/image-watermark" title="图片加水印" desc="在浏览器内为图片添加自定义文字水印。" icon="💧" />
+        <ToolCard href="/zh/word-counter" title="字数统计" desc="实时统计字数、词频和阅读时间。" icon="📝" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">常见问题</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>我的录音会被上传到服务器吗？</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">不会。录音完全在您的浏览器本地使用 MediaRecorder API 处理，没有任何数据被上传。</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const recordBtn = document.getElementById('record-btn') as HTMLButtonElement;
+    const stopBtn = document.getElementById('stop-btn') as HTMLButtonElement;
+    const timerEl = document.getElementById('timer') as HTMLDivElement;
+    const playbackArea = document.getElementById('playback-area') as HTMLDivElement;
+    const audioPlayback = document.getElementById('audio-playback') as HTMLAudioElement;
+    const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
+    const canvas = document.getElementById('visualizer') as HTMLCanvasElement;
+    const canvasCtx = canvas.getContext('2d')!;
+
+    let mediaRecorder: MediaRecorder;
+    let audioChunks: Blob[] = [];
+    let startTime: number;
+    let timerInterval: number;
+    let animationFrame: number;
+    
+    let audioContext: AudioContext;
+    let analyser: AnalyserNode;
+    let dataArray: Uint8Array;
+    let source: MediaStreamAudioSourceNode;
+
+    function updateTimer() {
+      const now = performance.now();
+      const diff = now - startTime;
+      const seconds = Math.floor(diff / 1000);
+      const tenths = Math.floor((diff % 1000) / 100);
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${tenths}`;
+    }
+
+    function drawVisualizer() {
+      animationFrame = requestAnimationFrame(drawVisualizer);
+      
+      analyser.getByteTimeDomainData(dataArray);
+      
+      canvasCtx.fillStyle = getComputedStyle(document.documentElement).classList.contains('dark') ? '#1f2937' : '#f9fafb';
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      canvasCtx.lineWidth = 2;
+      canvasCtx.strokeStyle = '#6366f1';
+      canvasCtx.beginPath();
+      
+      const sliceWidth = canvas.width * 1.0 / dataArray.length;
+      let x = 0;
+      
+      for (let i = 0; i < dataArray.length; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = v * canvas.height / 2;
+        
+        if (i === 0) {
+          canvasCtx.moveTo(x, y);
+        } else {
+          canvasCtx.lineTo(x, y);
+        }
+        x += sliceWidth;
+      }
+      
+      canvasCtx.lineTo(canvas.width, canvas.height / 2);
+      canvasCtx.stroke();
+    }
+
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048;
+        dataArray = new Uint8Array(analyser.fftSize);
+        source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        drawVisualizer();
+
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          
+          audioPlayback.src = audioUrl;
+          downloadBtn.href = audioUrl;
+          playbackArea.classList.remove('hidden');
+          playbackArea.classList.add('flex');
+
+          stream.getTracks().forEach(track => track.stop());
+          audioContext.close();
+        };
+
+        mediaRecorder.start();
+        startTime = performance.now();
+        timerInterval = window.setInterval(updateTimer, 100);
+
+        recordBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        stopBtn.classList.add('flex');
+        playbackArea.classList.add('hidden');
+        playbackArea.classList.remove('flex');
+
+      } catch (err) {
+        alert('无法访问麦克风，请确保您使用的是 HTTPS 环境或 localhost，并允许了麦克风权限。');
+        console.error(err);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        clearInterval(timerInterval);
+        cancelAnimationFrame(animationFrame);
+        
+        stopBtn.classList.add('hidden');
+        stopBtn.classList.remove('flex');
+        recordBtn.classList.remove('hidden');
+        
+        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    recordBtn.addEventListener('click', startRecording);
+    stopBtn.addEventListener('click', stopRecording);
+  </script>
+</BaseLayout>
