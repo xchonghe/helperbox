@@ -1,0 +1,309 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Image to PDF — Convert JPG, PNG to PDF Online"
+  description="Free online image to PDF converter. Combine multiple images into a single PDF file. Customize page size, orientation, and margins. 100% private."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Image to PDF</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Image to PDF</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Convert your images into a professional PDF document right in your browser.
+      </p>
+    </div>
+
+    <!-- 上传区 -->
+    <label for="file-input" id="drop-zone" style="height: 180px;" class="relative mx-auto mb-8 flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-indigo-50/50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:border-indigo-600 dark:hover:bg-indigo-900/20">
+      <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50">
+        <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      </div>
+      <p class="text-base font-medium text-gray-700 dark:text-gray-300">Click or drag images here</p>
+      <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Supports JPG, PNG, WebP</p>
+      <input type="file" id="file-input" multiple accept="image/*" style="display: none;" />
+    </label>
+
+    <!-- 工作区 (默认隐藏) -->
+    <div id="workspace" class="hidden grid gap-6 lg:grid-cols-3">
+      
+      <!-- 左侧设置面板 -->
+      <div class="flex flex-col gap-5 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h3 class="font-bold text-gray-900 dark:text-white">PDF Settings</h3>
+        
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Page Size</label>
+          <select id="page-size" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+            <option value="a4">A4 (Standard)</option>
+            <option value="letter">US Letter</option>
+            <option value="fit">Fit to Image (No Margins)</option>
+          </select>
+        </div>
+
+        <div id="orientation-wrapper">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Orientation</label>
+          <select id="orientation" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+            <option value="portrait">Portrait (Vertical)</option>
+            <option value="landscape">Landscape (Horizontal)</option>
+          </select>
+        </div>
+
+        <div id="margin-wrapper">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Margin</label>
+          <select id="margin" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+            <option value="0">None</option>
+            <option value="20">Small (20pt)</option>
+            <option value="40">Medium (40pt)</option>
+          </select>
+        </div>
+
+        <button id="convert-btn" class="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-3 font-bold text-white shadow-md transition hover:bg-indigo-700 active:scale-95 disabled:opacity-50">
+          Convert to PDF
+        </button>
+        
+        <div id="status-text" class="text-center text-xs text-gray-500 dark:text-gray-400"></div>
+      </div>
+
+      <!-- 右侧图片列表 -->
+      <div class="lg:col-span-2">
+        <div class="mb-3 flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Selected Images</span>
+          <button id="clear-btn" class="text-xs text-red-500 hover:underline">Clear All</button>
+        </div>
+        <div id="image-list" class="space-y-2 max-h-[600px] overflow-y-auto pr-2"></div>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/merge-pdf" title="Merge PDF" desc="Combine multiple PDFs into one file." icon="📎" />
+        <ToolCard href="/convert-image" title="Convert Image" desc="Convert between JPG, PNG, and WebP." icon="🔄" />
+      </div>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    import { PDFDocument } from 'pdf-lib';
+
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const dropZone = document.getElementById('drop-zone') as HTMLLabelElement;
+    const workspace = document.getElementById('workspace') as HTMLDivElement;
+    const imageList = document.getElementById('image-list') as HTMLDivElement;
+    const convertBtn = document.getElementById('convert-btn') as HTMLButtonElement;
+    const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+    const pageSizeSelect = document.getElementById('page-size') as HTMLSelectElement;
+    const orientationSelect = document.getElementById('orientation') as HTMLSelectElement;
+    const marginSelect = document.getElementById('margin') as HTMLSelectElement;
+    const statusText = document.getElementById('status-text') as HTMLDivElement;
+
+    const orientationWrapper = document.getElementById('orientation-wrapper') as HTMLDivElement;
+    const marginWrapper = document.getElementById('margin-wrapper') as HTMLDivElement;
+
+    let files: File[] = [];
+
+    // 页面设置联动
+    pageSizeSelect.addEventListener('change', () => {
+      if (pageSizeSelect.value === 'fit') {
+        orientationWrapper.style.opacity = '0.5';
+        orientationSelect.disabled = true;
+        marginWrapper.style.opacity = '0.5';
+        marginSelect.disabled = true;
+      } else {
+        orientationWrapper.style.opacity = '1';
+        orientationSelect.disabled = false;
+        marginWrapper.style.opacity = '1';
+        marginSelect.disabled = false;
+      }
+    });
+
+    // 文件上传
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+      if (e.dataTransfer?.files.length) handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files?.length) handleFiles(fileInput.files);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      files = [];
+      renderList();
+    });
+
+    function handleFiles(newFiles: FileList) {
+      const imgFiles = Array.from(newFiles).filter(f => f.type.startsWith('image/')).slice(0, 20);
+      files = [...files, ...imgFiles];
+      renderList();
+    }
+
+    function renderList() {
+      imageList.innerHTML = '';
+      
+      if (files.length === 0) {
+        workspace.classList.add('hidden');
+        workspace.classList.remove('grid');
+        return;
+      }
+
+      workspace.classList.remove('hidden');
+      workspace.classList.add('grid');
+
+      files.forEach((file, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900';
+        
+        row.innerHTML = `
+          <div style="width: 48px; height: 48px;" class="shrink-0 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
+            <img style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div class="flex-1 overflow-hidden">
+            <p class="truncate text-sm font-medium text-gray-900 dark:text-white">${file.name}</p>
+          </div>
+          <div class="flex items-center gap-1">
+            <button class="move-up rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 ${index === 0 ? 'opacity-30 cursor-not-allowed' : ''}" ${index === 0 ? 'disabled' : ''}>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+            </button>
+            <button class="move-down rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 ${index === files.length - 1 ? 'opacity-30 cursor-not-allowed' : ''}" ${index === files.length - 1 ? 'disabled' : ''}>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <button class="remove-btn ml-2 text-xs text-red-500 hover:text-red-700 px-2">Remove</button>
+          </div>
+        `;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imgEl = row.querySelector('img');
+          if (imgEl) imgEl.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+
+        row.querySelector('.move-up')?.addEventListener('click', () => {
+          if (index > 0) {
+            [files[index - 1], files[index]] = [files[index], files[index - 1]];
+            renderList();
+          }
+        });
+
+        row.querySelector('.move-down')?.addEventListener('click', () => {
+          if (index < files.length - 1) {
+            [files[index + 1], files[index]] = [files[index], files[index + 1]];
+            renderList();
+          }
+        });
+
+        row.querySelector('.remove-btn')?.addEventListener('click', () => {
+          files.splice(index, 1);
+          renderList();
+        });
+
+        imageList.appendChild(row);
+      });
+    }
+
+    // 核心转换逻辑
+    convertBtn.addEventListener('click', async () => {
+      if (files.length === 0) return;
+      
+      convertBtn.disabled = true;
+      statusText.textContent = "Generating PDF... Please wait.";
+
+      try {
+        const pdfDoc = await PDFDocument.create();
+        const sizeType = pageSizeSelect.value;
+        const orient = orientationSelect.value;
+        const margin = parseFloat(marginSelect.value);
+
+        for (const file of files) {
+          // 用 Canvas 统一处理图片，防止 WebP 等格式在 pdf-lib 中报错
+          const arrayBuffer = await file.arrayBuffer();
+          const blob = new Blob([arrayBuffer], { type: file.type });
+          const imgUrl = URL.createObjectURL(blob);
+          const img = new Image();
+          await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = imgUrl; });
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d')!;
+          // 填充白底，防止 PNG 透明背景变黑
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          
+          // 转成 95% 质量的 JPG 字节
+          const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+          const jpgBytes = Uint8Array.from(atob(jpgDataUrl.split(',')[1]), c => c.charCodeAt(0));
+          
+          const pdfImg = await pdfDoc.embedJpg(jpgBytes);
+          
+          // 设置页面尺寸
+          let pw = 595.28, ph = 841.89; // A4 默认
+          if (sizeType === 'letter') { pw = 612; ph = 792; }
+          else if (sizeType === 'fit') { pw = img.width; ph = img.height; }
+
+          if (sizeType !== 'fit' && orient === 'landscape') {
+            [pw, ph] = [ph, pw]; // 交换宽高
+          }
+
+          const page = pdfDoc.addPage([pw, ph]);
+          
+          // 计算图片在页面中的缩放比例 (等比缩放并居中)
+          const availableW = pw - margin * 2;
+          const availableH = ph - margin * 2;
+          const scaled = pdfImg.scaleToFit(availableW, availableH);
+          
+          page.drawImage(pdfImg, {
+            x: pw / 2 - scaled.width / 2,
+            y: ph / 2 - scaled.height / 2,
+            width: scaled.width,
+            height: scaled.height,
+          });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        
+        const a = document.createElement('a');
+        a.href = pdfUrl;
+        a.download = 'converted-images.pdf';
+        a.click();
+        URL.revokeObjectURL(pdfUrl);
+
+        statusText.textContent = "PDF Downloaded successfully!";
+      } catch (err: any) {
+        console.error(err);
+        statusText.textContent = "Error converting images.";
+      } finally {
+        convertBtn.disabled = false;
+      }
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,278 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard.astro';
+---
+<BaseLayout
+  title="AI 去水印 — 智能擦除图片水印"
+  description="免费在线 AI 去水印工具。利用纯前端算法智能擦除图片上的水印或杂物。100% 本地处理，保护隐私。"
+  lang="zh"
+>
+  <Header lang="zh" />
+
+  <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/zh/" class="hover:text-indigo-600">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">AI 去水印</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">AI 去水印</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        上传图片，用画笔涂抹水印区域，一键智能擦除。所有处理均在本地完成。
+      </p>
+    </div>
+
+    <!-- 初始上传区 -->
+    <div id="upload-section">
+      <label for="file-input" id="drop-zone" style="height: 200px;" class="relative mx-auto mb-8 flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-indigo-50/50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:border-indigo-600 dark:hover:bg-indigo-900/20">
+        <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50">
+          <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        </div>
+        <p class="text-base font-medium text-gray-700 dark:text-gray-300">点击或将图片拖拽到这里</p>
+        <input type="file" id="file-input" accept="image/*" style="display: none;" />
+      </label>
+    </div>
+
+    <!-- 工作区 (默认隐藏) -->
+    <div id="workspace" class="hidden grid gap-6 lg:grid-cols-4">
+      
+      <!-- 左侧工具栏 -->
+      <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        
+        <div>
+          <label class="mb-2 flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span>刷头尺寸</span>
+            <span id="brush-size-val" class="font-mono text-indigo-600 dark:text-indigo-400">30 px</span>
+          </label>
+          <input type="range" id="brush-size" min="10" max="100" value="30" class="w-full accent-indigo-600" />
+        </div>
+        
+        <button id="clear-btn" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">清除遮罩</button>
+        
+        <hr class="border-gray-200 dark:border-gray-700" />
+        
+        <button id="remove-btn" class="w-full rounded-lg bg-indigo-600 px-4 py-3 font-bold text-white shadow-md transition hover:bg-indigo-700 active:scale-95 disabled:opacity-50">
+          ✨ 一键去除水印
+        </button>
+        <button id="download-btn" class="hidden w-full rounded-lg bg-green-600 px-4 py-3 font-bold text-white shadow-md transition hover:bg-green-700 active:scale-95">
+          下载处理后的图片
+        </button>
+        
+        <div id="status-text" class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"></div>
+      </div>
+
+      <!-- 右侧画布区 -->
+      <div class="relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-100 p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 lg:col-span-3">
+        <!-- 用一个 div 包裹，确保画布完美对齐 -->
+        <div id="canvas-container" class="relative inline-block">
+          <canvas id="canvas-base" class="block max-h-[60vh] max-w-full rounded object-contain"></canvas>
+          <canvas id="canvas-mask" class="absolute inset-0 block h-full w-full cursor-crosshair rounded object-contain touch-none"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">相关工具</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/zh/image-watermark" title="图片加水印" desc="在浏览器内为图片添加自定义文字水印。" icon="💧" />
+        <ToolCard href="/zh/compress-image" title="图片压缩" desc="在线压缩图片体积，不损失画质。" icon="🗜️" />
+      </div>
+    </div>
+
+  </main>
+
+  <Footer lang="zh" />
+
+  <script>
+    const uploadSection = document.getElementById('upload-section') as HTMLDivElement;
+    const workspace = document.getElementById('workspace') as HTMLDivElement;
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const canvasBase = document.getElementById('canvas-base') as HTMLCanvasElement;
+    const canvasMask = document.getElementById('canvas-mask') as HTMLCanvasElement;
+    const brushSizeInput = document.getElementById('brush-size') as HTMLInputElement;
+    const brushSizeVal = document.getElementById('brush-size-val') as HTMLSpanElement;
+    const removeBtn = document.getElementById('remove-btn') as HTMLButtonElement;
+    const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+    const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+    const statusText = document.getElementById('status-text') as HTMLDivElement;
+
+    let ctxBase = canvasBase.getContext('2d', { willReadFrequently: true })!;
+    let ctxMask = canvasMask.getContext('2d', { willReadFrequently: true })!;
+    let isDrawing = false;
+
+    fileInput.addEventListener('change', (e) => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          canvasBase.width = img.width;
+          canvasBase.height = img.height;
+          canvasMask.width = img.width;
+          canvasMask.height = img.height;
+          
+          ctxBase.drawImage(img, 0, 0);
+          
+          uploadSection.classList.add('hidden');
+          workspace.classList.remove('hidden');
+          workspace.classList.add('grid');
+        };
+        img.src = ev.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 【黑科技】动态生成原生的 SVG 圆形光标
+    function updateCursor() {
+      const size = parseInt(brushSizeInput.value);
+      brushSizeVal.textContent = size + ' px'; // 更新文字显示
+      
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+        <circle cx="${size/2}" cy="${size/2}" r="${size/2 - 1}" fill="rgba(99,102,241,0.3)" stroke="#6366f1" stroke-width="2"/>
+      </svg>`;
+      
+      const cursorUrl = `url('data:image/svg+xml;utf8,${encodeURIComponent(svg)}') ${size/2} ${size/2}, crosshair`;
+      canvasMask.style.cursor = cursorUrl;
+    }
+    
+    brushSizeInput.addEventListener('input', updateCursor);
+    updateCursor();
+
+    // 涂抹逻辑
+    function handleMove(e: MouseEvent | Touch) {
+      if (!isDrawing) return;
+      
+      const rect = canvasMask.getBoundingClientRect();
+      const scaleX = canvasMask.width / rect.width;
+      const scaleY = canvasMask.height / rect.height;
+      
+      let clientX, clientY;
+      if (window.TouchEvent && e instanceof TouchEvent) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = (e as MouseEvent).clientX;
+        clientY = (e as MouseEvent).clientY;
+      }
+
+      const drawX = (clientX - rect.left) * scaleX;
+      const drawY = (clientY - rect.top) * scaleY;
+      const drawSize = parseInt(brushSizeInput.value) * scaleX;
+
+      ctxMask.fillStyle = 'rgba(255, 0, 0, 0.5)';
+      ctxMask.beginPath();
+      ctxMask.arc(drawX, drawY, drawSize / 2, 0, Math.PI * 2);
+      ctxMask.fill();
+    }
+
+    function startDrawing(e: MouseEvent | Touch) {
+      isDrawing = true;
+      handleMove(e);
+    }
+
+    function stopDrawing() { isDrawing = false; }
+
+    canvasMask.addEventListener('mousedown', startDrawing);
+    canvasMask.addEventListener('mousemove', handleMove);
+    canvasMask.addEventListener('mouseup', stopDrawing);
+    canvasMask.addEventListener('mouseout', stopDrawing);
+    
+    canvasMask.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e.touches[0]); }, {passive: false});
+    canvasMask.addEventListener('touchmove', (e) => { e.preventDefault(); handleMove(e.touches[0]); }, {passive: false});
+    canvasMask.addEventListener('touchend', stopDrawing);
+
+    clearBtn.addEventListener('click', () => {
+      ctxMask.clearRect(0, 0, canvasMask.width, canvasMask.height);
+    });
+
+    // 核心纯代码填充算法
+    removeBtn.addEventListener('click', async () => {
+      removeBtn.disabled = true;
+      statusText.textContent = "正在处理中，请稍候...";
+
+      setTimeout(() => {
+        try {
+          const w = canvasBase.width;
+          const h = canvasBase.height;
+          const imgData = ctxBase.getImageData(0, 0, w, h);
+          const maskData = ctxMask.getImageData(0, 0, w, h).data;
+          const data = imgData.data;
+          
+          const maskPixels: {x: number, y: number}[] = [];
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              if (maskData[(y * w + x) * 4 + 3] > 0) {
+                maskPixels.push({ x, y });
+              }
+            }
+          }
+
+          if (maskPixels.length === 0) {
+            statusText.textContent = "请先用画笔涂抹要去除的水印区域。";
+            removeBtn.disabled = false;
+            return;
+          }
+
+          for (let iteration = 0; iteration < 15; iteration++) {
+            for (let i = 0; i < maskPixels.length; i++) {
+              const p = maskPixels[i];
+              let r = 0, g = 0, b = 0, count = 0;
+              const radius = 3;
+
+              for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                  if (dx === 0 && dy === 0) continue;
+                  const nx = p.x + dx;
+                  const ny = p.y + dy;
+
+                  if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                    const nIndex = (ny * w + nx) * 4;
+                    if (maskData[nIndex + 3] === 0) {
+                      r += data[nIndex];
+                      g += data[nIndex + 1];
+                      b += data[nIndex + 2];
+                      count++;
+                    }
+                  }
+                }
+              }
+
+              if (count > 0) {
+                const idx = (p.y * w + p.x) * 4;
+                data[idx] = r / count;
+                data[idx + 1] = g / count;
+                data[idx + 2] = b / count;
+                maskData[idx + 3] = 0; 
+              }
+            }
+          }
+
+          ctxBase.putImageData(imgData, 0, 0);
+          ctxMask.clearRect(0, 0, w, h);
+          
+          statusText.textContent = "处理成功！";
+          downloadBtn.classList.remove('hidden');
+        } catch (err) {
+          console.error(err);
+          statusText.textContent = "处理图片时发生错误。";
+        } finally {
+          removeBtn.disabled = false;
+        }
+      }, 100);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = canvasBase.toDataURL('image/png');
+      a.download = 'watermark-removed.png';
+      a.click();
+    });
+  </script>
+</BaseLayout>
