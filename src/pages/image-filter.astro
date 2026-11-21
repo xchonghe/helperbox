@@ -1,0 +1,293 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Image Filter & Editor — Adjust Photos Online"
+  description="Free online image filter and editor. Adjust brightness, contrast, saturation, and apply artistic filters. Download high-resolution images locally."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-6xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Image Filter</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Image Filter & Editor</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Apply professional filters and adjust photo settings in real-time.
+      </p>
+    </div>
+
+    <!-- 初始上传区 -->
+    <div id="upload-section">
+      <label for="file-input" id="drop-zone" style="height: 180px;" class="relative mx-auto mb-8 flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition hover:border-indigo-400 hover:bg-indigo-50/50 dark:border-gray-700 dark:bg-gray-900/50 dark:hover:border-indigo-600 dark:hover:bg-indigo-900/20">
+        <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50">
+          <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        </div>
+        <p class="text-base font-medium text-gray-700 dark:text-gray-300">Click or drag an image here</p>
+        <input type="file" id="file-input" accept="image/*" style="display: none;" />
+      </label>
+    </div>
+
+    <!-- 工作区 (默认隐藏) -->
+    <div id="workspace" class="hidden grid gap-6 lg:grid-cols-3">
+      
+      <!-- 左侧预览区 -->
+      <div class="relative flex min-h-[400px] min-w-0 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-100 p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 lg:col-span-2">
+        <div class="relative flex h-[60vh] w-full items-center justify-center overflow-hidden">
+          <!-- 图片本身不改变，靠 CSS filter 实时预览 -->
+          <img id="image-preview" src="" alt="Preview" class="block max-h-full max-w-full object-contain transition-all duration-75" />
+        </div>
+      </div>
+
+      <!-- 右侧控制面板 -->
+      <div class="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-gray-900 dark:text-white">Adjustments</h3>
+          <button id="reset-btn" class="text-xs text-red-500 hover:underline">Reset All</button>
+        </div>
+        
+        <!-- 滑块设置项 -->
+        <div class="space-y-4 max-h-[45vh] overflow-y-auto pr-2">
+          
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Brightness</span>
+              <span id="val-brightness" class="font-mono text-indigo-600 dark:text-indigo-400">100%</span>
+            </label>
+            <input type="range" id="filter-brightness" min="0" max="200" value="100" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Contrast</span>
+              <span id="val-contrast" class="font-mono text-indigo-600 dark:text-indigo-400">100%</span>
+            </label>
+            <input type="range" id="filter-contrast" min="0" max="200" value="100" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Saturation</span>
+              <span id="val-saturate" class="font-mono text-indigo-600 dark:text-indigo-400">100%</span>
+            </label>
+            <input type="range" id="filter-saturate" min="0" max="200" value="100" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Blur</span>
+              <span id="val-blur" class="font-mono text-indigo-600 dark:text-indigo-400">0px</span>
+            </label>
+            <input type="range" id="filter-blur" min="0" max="20" value="0" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Grayscale</span>
+              <span id="val-grayscale" class="font-mono text-indigo-600 dark:text-indigo-400">0%</span>
+            </label>
+            <input type="range" id="filter-grayscale" min="0" max="100" value="0" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Sepia (Vintage)</span>
+              <span id="val-sepia" class="font-mono text-indigo-600 dark:text-indigo-400">0%</span>
+            </label>
+            <input type="range" id="filter-sepia" min="0" max="100" value="0" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Hue Rotate</span>
+              <span id="val-hue" class="font-mono text-indigo-600 dark:text-indigo-400">0deg</span>
+            </label>
+            <input type="range" id="filter-hue" min="0" max="360" value="0" class="w-full accent-indigo-600" />
+          </div>
+
+          <div>
+            <label class="mb-1 flex justify-between text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span>Invert</span>
+              <span id="val-invert" class="font-mono text-indigo-600 dark:text-indigo-400">0%</span>
+            </label>
+            <input type="range" id="filter-invert" min="0" max="100" value="0" class="w-full accent-indigo-600" />
+          </div>
+
+        </div>
+
+        <hr class="border-gray-200 dark:border-gray-700 my-1" />
+        
+        <button id="download-btn" class="w-full rounded-lg bg-indigo-600 px-4 py-3 font-bold text-white shadow-md transition hover:bg-indigo-700 active:scale-95">
+          Download Image
+        </button>
+        
+        <button id="reset-img-btn" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
+          Upload Different Image
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/crop-image" title="Crop Image" desc="Crop, rotate, and flip images precisely." icon="✂️" />
+        <ToolCard href="/compress-image" title="Compress Image" desc="Shrink image file size without losing quality." icon="🗜️" />
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+      <details class="group rounded-xl border border-gray-200 bg-white p-4 open:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:open:bg-gray-900/50">
+        <summary class="cursor-pointer list-none flex justify-between items-center font-medium text-gray-900 dark:text-gray-100">
+          <span>Does this tool reduce image quality?</span>
+          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">No. When you download, we apply the filters directly to the original high-resolution image using the HTML5 Canvas API, preserving the maximum possible quality.</p>
+      </details>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    const uploadSection = document.getElementById('upload-section') as HTMLDivElement;
+    const workspace = document.getElementById('workspace') as HTMLDivElement;
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+    const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+    const resetImgBtn = document.getElementById('reset-img-btn') as HTMLButtonElement;
+    const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+
+    // 所有滑块
+    const filters = {
+      brightness: document.getElementById('filter-brightness') as HTMLInputElement,
+      contrast: document.getElementById('filter-contrast') as HTMLInputElement,
+      saturate: document.getElementById('filter-saturate') as HTMLInputElement,
+      blur: document.getElementById('filter-blur') as HTMLInputElement,
+      grayscale: document.getElementById('filter-grayscale') as HTMLInputElement,
+      sepia: document.getElementById('filter-sepia') as HTMLInputElement,
+      hue: document.getElementById('filter-hue') as HTMLInputElement,
+      invert: document.getElementById('filter-invert') as HTMLInputElement,
+    };
+
+    const vals = {
+      brightness: document.getElementById('val-brightness') as HTMLSpanElement,
+      contrast: document.getElementById('val-contrast') as HTMLSpanElement,
+      saturate: document.getElementById('val-saturate') as HTMLSpanElement,
+      blur: document.getElementById('val-blur') as HTMLSpanElement,
+      grayscale: document.getElementById('val-grayscale') as HTMLSpanElement,
+      sepia: document.getElementById('val-sepia') as HTMLSpanElement,
+      hue: document.getElementById('val-hue') as HTMLSpanElement,
+      invert: document.getElementById('val-invert') as HTMLSpanElement,
+    };
+
+    let originalImage: HTMLImageElement | null = null;
+
+    fileInput.addEventListener('change', (e) => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        imagePreview.src = ev.target?.result as string;
+        imagePreview.onload = () => {
+          originalImage = new Image();
+          originalImage.src = imagePreview.src;
+        };
+        uploadSection.classList.add('hidden');
+        workspace.classList.remove('hidden');
+        workspace.classList.add('grid');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 实时更新滤镜预览
+    function updateFilter() {
+      const b = filters.brightness.value;
+      const c = filters.contrast.value;
+      const s = filters.saturate.value;
+      const bl = filters.blur.value;
+      const g = filters.grayscale.value;
+      const se = filters.sepia.value;
+      const h = filters.hue.value;
+      const i = filters.invert.value;
+
+      vals.brightness.textContent = b + '%';
+      vals.contrast.textContent = c + '%';
+      vals.saturate.textContent = s + '%';
+      vals.blur.textContent = bl + 'px';
+      vals.grayscale.textContent = g + '%';
+      vals.sepia.textContent = se + '%';
+      vals.hue.textContent = h + 'deg';
+      vals.invert.textContent = i + '%';
+
+      imagePreview.style.filter = `
+        brightness(${b}%) 
+        contrast(${c}%) 
+        saturate(${s}%) 
+        blur(${bl}px) 
+        grayscale(${g}%) 
+        sepia(${se}%) 
+        hue-rotate(${h}deg) 
+        invert(${i}%)
+      `;
+    }
+
+    Object.values(filters).forEach(input => {
+      input.addEventListener('input', updateFilter);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      filters.brightness.value = '100';
+      filters.contrast.value = '100';
+      filters.saturate.value = '100';
+      filters.blur.value = '0';
+      filters.grayscale.value = '0';
+      filters.sepia.value = '0';
+      filters.hue.value = '0';
+      filters.invert.value = '0';
+      updateFilter();
+    });
+
+    resetImgBtn.addEventListener('click', () => {
+      resetBtn.click();
+      fileInput.value = '';
+      imagePreview.src = '';
+      originalImage = null;
+      workspace.classList.add('hidden');
+      workspace.classList.remove('grid');
+      uploadSection.classList.remove('hidden');
+    });
+
+    // 下载超清原图尺寸（将滤镜应用到 Canvas）
+    downloadBtn.addEventListener('click', () => {
+      if (!originalImage) return;
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = originalImage.width;
+      canvas.height = originalImage.height;
+      const ctx = canvas.getContext('2d')!;
+
+      // 应用相同的 CSS 滤镜到 Canvas 上下文
+      ctx.filter = imagePreview.style.filter;
+      ctx.drawImage(originalImage, 0, 0);
+
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/jpeg', 0.95);
+      a.download = 'filtered-image.jpg';
+      a.click();
+    });
+  </script>
+</BaseLayout>

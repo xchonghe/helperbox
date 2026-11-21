@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ToolCard from '../components/ToolCard.astro';
+---
+<BaseLayout
+  title="Text Diff Checker — Compare Text Online"
+  description="Free online text diff tool. Compare two texts and highlight the differences instantly. Perfect for editors, developers, and proofreading."
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="mx-auto max-w-6xl px-4 py-12 md:py-20">
+    
+    <nav class="mb-8 text-sm text-gray-500 dark:text-gray-400">
+      <a href="/" class="hover:text-indigo-600">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900 dark:text-gray-100">Text Diff Checker</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Text Diff Checker</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">
+        Compare two texts and highlight additions and deletions in real-time.
+      </p>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="grid gap-4 lg:grid-cols-2 mb-6">
+      <div class="flex flex-col">
+        <div class="flex items-center justify-between rounded-t-xl border border-b-0 border-gray-200 bg-red-50 px-4 py-2 dark:border-gray-800 dark:bg-red-900/20">
+          <span class="text-sm font-bold text-red-600 dark:text-red-400">Original Text (Old)</span>
+          <button id="clear-left" class="text-xs text-red-500 hover:underline">Clear</button>
+        </div>
+        <textarea id="text-left" class="h-[250px] w-full resize-none rounded-b-xl border border-gray-200 bg-white p-4 font-mono text-sm outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100" placeholder="Paste the original text here..."></textarea>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="flex items-center justify-between rounded-t-xl border border-b-0 border-gray-200 bg-green-50 px-4 py-2 dark:border-gray-800 dark:bg-green-900/20">
+          <span class="text-sm font-bold text-green-600 dark:text-green-400">New Text</span>
+          <button id="clear-right" class="text-xs text-green-500 hover:underline">Clear</button>
+        </div>
+        <textarea id="text-right" class="h-[250px] w-full resize-none rounded-b-xl border border-gray-200 bg-white p-4 font-mono text-sm outline-none focus:border-green-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100" placeholder="Paste the new text here..."></textarea>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="flex justify-center mb-8">
+      <button id="compare-btn" class="rounded-lg bg-indigo-600 px-8 py-3 font-bold text-white shadow-md transition hover:bg-indigo-700 active:scale-95">
+        Compare Texts
+      </button>
+    </div>
+
+    <!-- 结果展示区 (默认隐藏) -->
+    <div id="result-section" class="hidden">
+      <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Differences</h2>
+      <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="flex items-center border-b border-gray-200 bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500 dark:border-gray-800 dark:bg-gray-900/50">
+          <span class="w-1/2 border-r border-gray-200 pr-4 dark:border-gray-800">Original</span>
+          <span class="w-1/2 pl-4">New</span>
+        </div>
+        <div id="diff-output" class="p-4 font-mono text-sm leading-relaxed overflow-x-auto"></div>
+      </div>
+    </div>
+
+    <!-- 相关工具 -->
+    <div class="mt-16">
+      <h2 class="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Related Tools</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <ToolCard href="/word-counter" title="Word Counter" desc="Count words and characters." icon="📝" />
+        <ToolCard href="/json-formatter" title="JSON Formatter" desc="Format and validate JSON instantly." icon="{ }" />
+      </div>
+    </div>
+
+  </main>
+
+  <Footer lang="en" />
+
+  <script>
+    import * as Diff from 'diff';
+
+    const textLeft = document.getElementById('text-left') as HTMLTextAreaElement;
+    const textRight = document.getElementById('text-right') as HTMLTextAreaElement;
+    const compareBtn = document.getElementById('compare-btn') as HTMLButtonElement;
+    const resultSection = document.getElementById('result-section') as HTMLDivElement;
+    const diffOutput = document.getElementById('diff-output') as HTMLDivElement;
+
+    document.getElementById('clear-left')?.addEventListener('click', () => { textLeft.value = ''; });
+    document.getElementById('clear-right')?.addEventListener('click', () => { textRight.value = ''; });
+
+    compareBtn.addEventListener('click', () => {
+      const left = textLeft.value;
+      const right = textRight.value;
+
+      if (!left && !right) {
+        alert('Please enter some text to compare.');
+        return;
+      }
+
+      // 使用 diffWords 按词或按行对比 (diffLines 也可以)
+      const differences = Diff.diffWords(left, right);
+
+      diffOutput.innerHTML = '';
+      
+      differences.forEach((part) => {
+        const span = document.createElement('span');
+        span.textContent = part.value;
+        
+        if (part.added) {
+          span.className = 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 px-0.5 rounded';
+        } else if (part.removed) {
+          span.className = 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 line-through px-0.5 rounded';
+        } else {
+          span.className = 'text-gray-600 dark:text-gray-400';
+        }
+        
+        diffOutput.appendChild(span);
+      });
+
+      resultSection.classList.remove('hidden');
+    });
+  </script>
+</BaseLayout>

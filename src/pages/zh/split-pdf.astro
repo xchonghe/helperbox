@@ -199,7 +199,7 @@ import ToolCard from '../../components/ToolCard.astro';
         copiedPages.forEach((page) => newPdf.addPage(page));
 
         const newPdfBytes = await newPdf.save();
-        const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+        const blob = new Blob([newPdfBytes as any], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         
         const a = document.createElement('a');

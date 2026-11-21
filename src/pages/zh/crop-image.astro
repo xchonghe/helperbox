@@ -1,4 +1,3 @@
-
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
@@ -10,7 +9,6 @@ import ToolCard from '../../components/ToolCard.astro';
   description="免费在线图片裁剪工具。轻松拖拽裁剪图片，支持 1:1、16:9 比例锁定、任意角度旋转与翻转。高清无损导出，100% 本地处理。"
   lang="zh"
 >
-
   <Header lang="zh" />
 
   <main class="mx-auto max-w-5xl px-4 py-12 md:py-20">
@@ -42,10 +40,12 @@ import ToolCard from '../../components/ToolCard.astro';
     <!-- 工作区 (默认隐藏) -->
     <div id="workspace" class="hidden grid gap-6 lg:grid-cols-3">
       
-      <!-- 左侧操作区 (占两列) -->
-      <div class="relative flex min-h-[400px] min-w-0 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-100 p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 lg:col-span-2">
-        <!-- 关键修复：严格限制 img 的最大宽高 -->
-        <img id="image-to-crop" src="" alt="待裁剪的图片" class="block max-h-[60vh] max-w-full rounded object-contain shadow-sm" />
+      <!-- 左侧操作区 (修复溢出) -->
+      <div class="flex items-center justify-center min-h-[400px] min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-gray-100 p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/50 lg:col-span-2">
+        <!-- 用一个定高的盒子把图片死死框住，不让它到处乱跑 -->
+        <div class="relative flex h-[70vh] w-full items-center justify-center overflow-hidden">
+          <img id="image-to-crop" src="" alt="待裁剪的图片" class="block max-h-full max-w-full object-contain" />
+        </div>
       </div>
 
       <!-- 右侧控制面板 (占一列) -->
@@ -140,6 +140,9 @@ import ToolCard from '../../components/ToolCard.astro';
             cropBoxMovable: true,
             cropBoxResizable: true,
             toggleDragModeOnDblclick: false,
+            // 关键：确保响应式计算准确
+            responsive: true,
+            checkOrientation: false
           });
         };
       };
